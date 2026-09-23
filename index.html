@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,6 +24,8 @@
       --coral: #e89a8f;
       --sage: #9ab5a1;
       --gold: #d3b778;
+      --gold-deep: #b98a3e;
+      --bg: #101126;
       --danger: #e08888;
       --stroke: rgba(255, 255, 255, 0.1);
       --stroke-strong: rgba(255, 255, 255, 0.18);
@@ -150,11 +152,75 @@
       pointer-events: none;
     }
     .phone-screen {
+      position: relative;
       height: 100%;
       overflow: hidden;
       background:
         radial-gradient(circle at 30% -5%, rgba(169,148,237,.17), transparent 27%),
         var(--ink-900);
+    }
+    .phone::after {
+      content: "";
+      position: absolute;
+      z-index: 80;
+      inset: 7px;
+      border: 1px solid rgba(214,204,255,.06);
+      border-radius: 35px;
+      pointer-events: none;
+    }
+    .ambient-space {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .star-layer {
+      position: absolute;
+      inset: -15%;
+      opacity: .38;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.75) 0 1px, transparent 1.4px),
+        radial-gradient(circle, rgba(214,204,255,.7) 0 1px, transparent 1.4px);
+      background-position: 0 0, 28px 46px;
+      background-size: 74px 74px, 109px 109px;
+      animation: star-drift 46s linear infinite;
+    }
+    .star-layer.far {
+      opacity: .18;
+      background-size: 43px 43px, 83px 83px;
+      animation-duration: 78s;
+      animation-direction: reverse;
+    }
+    .nebula {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      filter: blur(54px);
+      opacity: .09;
+      background: var(--violet);
+      animation: nebula-breathe 12s ease-in-out infinite;
+    }
+    .nebula.one { top: -100px; right: -80px; }
+    .nebula.two { bottom: 12%; left: -140px; width: 300px; height: 300px; background: var(--coral); animation-delay: -5s; }
+    .shooting-star {
+      position: absolute;
+      top: 18%;
+      left: -90px;
+      width: 72px;
+      height: 1px;
+      opacity: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.7));
+      transform: rotate(-28deg);
+      animation: shooting 11s ease-in-out infinite 4s;
+    }
+    @keyframes star-drift { to { transform: translate3d(-38px, 62px, 0); } }
+    @keyframes nebula-breathe { 50% { transform: scale(1.16) translate(10px, 8px); opacity: .14; } }
+    @keyframes shooting {
+      0%, 72%, 100% { opacity: 0; transform: translate3d(0,0,0) rotate(-28deg); }
+      75% { opacity: .75; }
+      86% { opacity: 0; transform: translate3d(430px,180px,0) rotate(-28deg); }
     }
     .status {
       position: absolute;
@@ -175,18 +241,58 @@
     .status-icons i:last-child { width: 16px; background: currentColor; }
 
     .view {
+      position: relative;
+      z-index: 2;
       display: none;
       height: 100%;
       overflow-y: auto;
       padding: 54px 20px 108px;
       scrollbar-width: none;
-      animation: enter .35s var(--ease);
     }
     .view::-webkit-scrollbar { display: none; }
     .view.active { display: block; }
     @keyframes enter {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cosmic-enter {
+      from { opacity: 0; transform: scale(.975) rotate(.35deg); filter: blur(4px); }
+      to { opacity: 1; transform: scale(1) rotate(0); filter: blur(0); }
+    }
+    @keyframes tarot-enter {
+      from { opacity: 0; transform: perspective(600px) rotateY(-5deg) translateX(12px); }
+      to { opacity: 1; transform: perspective(600px) rotateY(0) translateX(0); }
+    }
+    .entrance-item {
+      --entrance-x: 0px;
+      --entrance-y: 0px;
+    }
+    .entrance-from-top { --entrance-y: -58px; }
+    .entrance-from-bottom { --entrance-y: 64px; }
+    .entrance-from-left { --entrance-x: -72px; }
+    .entrance-from-right { --entrance-x: 72px; }
+    .entrance-ready:not(.entrance-run) > .entrance-item {
+      opacity: 0;
+      transform: translate3d(var(--entrance-x), var(--entrance-y), 0) scale(.975);
+      filter: blur(5px);
+    }
+    .entrance-ready.entrance-run > .entrance-item {
+      animation: component-enter .68s var(--ease) both;
+      animation-delay: var(--entrance-delay, 0ms);
+      will-change: transform, opacity, filter;
+    }
+    @keyframes component-enter {
+      from {
+        opacity: 0;
+        transform: translate3d(var(--entrance-x), var(--entrance-y), 0) scale(.975);
+        filter: blur(5px);
+      }
+      68% { filter: blur(0); }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        filter: blur(0);
+      }
     }
 
     .topbar {
@@ -336,6 +442,205 @@
     }
     .hero-action:hover { transform: translateY(-2px); background: #fff; }
     .hero-action svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+    .cosmic-hero {
+      position: relative;
+      min-height: 318px;
+      margin-top: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(169,148,237,.25);
+      border-radius: var(--r-xl);
+      background:
+        radial-gradient(circle at 72% 35%, rgba(169,148,237,.19), transparent 32%),
+        linear-gradient(150deg, #252746, #17182f 70%);
+    }
+    .cosmic-hero::before {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      top: -140px;
+      left: -90px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+    }
+    .cosmic-hero::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: -30%;
+      bottom: -30%;
+      left: -55%;
+      width: 42%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.055), transparent);
+      transform: skewX(-18deg);
+      animation: cosmic-sweep 8s var(--ease) infinite 1.2s;
+    }
+    @keyframes cosmic-sweep {
+      0%, 62% { transform: translateX(0) skewX(-18deg); opacity: 0; }
+      68% { opacity: 1; }
+      86%, 100% { transform: translateX(520px) skewX(-18deg); opacity: 0; }
+    }
+    .cosmic-copy {
+      position: relative;
+      z-index: 3;
+      width: 58%;
+      padding: 22px 0 84px 20px;
+    }
+    .cosmic-copy h3 {
+      margin: 8px 0 8px;
+      font: 500 27px/1.05 "Newsreader", Georgia, serif;
+    }
+    .cosmic-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.5;
+    }
+    .chart-wheel {
+      position: absolute;
+      z-index: 2;
+      top: 38px;
+      right: -35px;
+      width: 205px;
+      height: 205px;
+      animation: chart-float 7s ease-in-out infinite;
+    }
+    @keyframes chart-float { 50% { transform: rotate(3deg) translateY(-4px); } }
+    .chart-wheel circle, .chart-wheel path, .chart-wheel line {
+      fill: none;
+      stroke: rgba(214,204,255,.38);
+      stroke-width: 1;
+      stroke-dasharray: 720;
+      stroke-dashoffset: 720;
+      animation: chart-draw 2.2s var(--ease) forwards;
+    }
+    .chart-wheel line { animation-delay: .28s; }
+    .chart-wheel path { animation-delay: .55s; }
+    .chart-wheel .planet {
+      fill: var(--gold);
+      stroke: none;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: planet-arrive .55s var(--ease) forwards 1.25s, planet-pulse 3s ease-in-out infinite 2s;
+    }
+    .chart-wheel .accent-planet {
+      fill: var(--coral);
+      stroke: none;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: planet-arrive .55s var(--ease) forwards 1.5s, planet-pulse 3.6s ease-in-out infinite 2.2s;
+    }
+    @keyframes chart-draw { to { stroke-dashoffset: 0; } }
+    @keyframes planet-arrive { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+    @keyframes planet-pulse { 50% { transform: scale(1.45); filter: drop-shadow(0 0 5px currentColor); } }
+    .cosmic-action {
+      position: absolute;
+      z-index: 4;
+      right: 16px;
+      bottom: 16px;
+      left: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 52px;
+      padding: 0 15px;
+      border: 0;
+      border-radius: 15px;
+      background: var(--paper);
+      color: var(--ink-900);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .22s var(--ease), background .22s var(--ease);
+    }
+    .cosmic-action:hover { transform: translateY(-2px); background: #fff; }
+    .celestial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .celestial-card {
+      position: relative;
+      min-height: 132px;
+      padding: 15px;
+      overflow: hidden;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-md);
+      background: var(--glass);
+      cursor: pointer;
+      transition: transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease);
+    }
+    .celestial-card:hover { transform: translateY(-3px); border-color: rgba(214,204,255,.26); background: rgba(255,255,255,.075); }
+    .celestial-card.wide {
+      grid-column: 1 / -1;
+      min-height: 104px;
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      gap: 13px;
+      align-items: center;
+    }
+    .celestial-card .metric {
+      margin-top: 13px;
+      font: 500 24px/1 "Newsreader", serif;
+    }
+    .celestial-card h3 { margin: 4px 0; font-size: 13px; }
+    .celestial-card p { margin: 0; color: var(--muted); font-size: 10.5px; line-height: 1.4; }
+    .celestial-card .section-kicker { font-size: 8px; }
+    .phase-art {
+      position: absolute;
+      right: 13px;
+      bottom: 12px;
+      width: 39px;
+      height: 39px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 22px rgba(211,183,120,.18);
+      animation: moon-glow 4.5s ease-in-out infinite;
+    }
+    @keyframes moon-glow { 50% { box-shadow: 0 0 34px rgba(211,183,120,.35); transform: scale(1.04); } }
+    .phase-art::after {
+      content: "";
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      top: -4px;
+      left: 13px;
+      border-radius: 50%;
+      background: var(--ink-800);
+    }
+    .mini-card-art {
+      position: relative;
+      width: 42px;
+      height: 60px;
+      border: 1px solid rgba(211,183,120,.5);
+      border-radius: 7px;
+      background: var(--ink-800);
+    }
+    .mini-card-art::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(211,183,120,.2);
+      border-radius: 4px;
+    }
+    .astrology-profile {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 18px 0;
+    }
+    .placement-chip {
+      padding: 12px 8px;
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      background: var(--glass);
+      text-align: center;
+    }
+    .placement-chip span { display: block; color: var(--muted-2); font-size: 8px; text-transform: uppercase; letter-spacing: .08em; }
+    .placement-chip strong { display: block; margin-top: 5px; font: 500 15px/1 "Newsreader", serif; }
 
     .section-head {
       display: flex;
@@ -489,6 +794,183 @@
     .orbit-art::before { inset: 0; transform: rotate(22deg); }
     .orbit-art::after { inset: 11px -8px; transform: rotate(-28deg); }
 
+    .tarot-ritual {
+      position: relative;
+      min-height: 238px;
+      margin-top: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(211,183,120,.2);
+      border-radius: var(--r-xl);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(211,183,120,.1), transparent 32%),
+        var(--glass);
+      perspective: 900px;
+    }
+    .ritual-copy {
+      position: absolute;
+      z-index: 5;
+      right: 15px;
+      bottom: 14px;
+      left: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ritual-copy p { margin: 0; color: var(--muted); font-size: 10px; }
+    .ritual-copy strong { display: block; margin-bottom: 2px; color: var(--paper); font-size: 12px; }
+    .ritual-deck {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      width: 92px;
+      height: 142px;
+      border: 0;
+      background: transparent;
+      transform: translateX(-50%);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .ritual-card {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(211,183,120,.55);
+      border-radius: 12px;
+      background: linear-gradient(145deg, #33365e, #18192f);
+      box-shadow: 0 16px 34px rgba(0,0,0,.34);
+      transition: transform .72s var(--ease), opacity .45s ease;
+      backface-visibility: hidden;
+    }
+    .ritual-card::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 1px solid rgba(211,183,120,.24);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(211,183,120,.25) 0 2px, transparent 3px),
+        repeating-radial-gradient(circle at center, transparent 0 13px, rgba(214,204,255,.08) 14px 15px);
+    }
+    .ritual-card:nth-child(1) { transform: translateX(-20px) rotate(-10deg); }
+    .ritual-card:nth-child(2) { transform: translateX(20px) rotate(10deg); }
+    .ritual-card:nth-child(3) { transform: translateY(-5px); }
+    .ritual-deck:active .ritual-card:nth-child(1) { transform: translateX(-38px) rotate(-16deg) translateY(3px); }
+    .ritual-deck:active .ritual-card:nth-child(2) { transform: translateX(38px) rotate(16deg) translateY(3px); }
+    @media (hover: hover) {
+      .ritual-deck:hover .ritual-card:nth-child(1) { transform: translateX(-38px) rotate(-16deg) translateY(3px); }
+      .ritual-deck:hover .ritual-card:nth-child(2) { transform: translateX(38px) rotate(16deg) translateY(3px); }
+    }
+    .ritual-deck.revealed .ritual-card:nth-child(1) { transform: translateX(-78px) rotate(-18deg); opacity: .55; }
+    .ritual-deck.revealed .ritual-card:nth-child(2) { transform: translateX(78px) rotate(18deg); opacity: .55; }
+    .ritual-deck.revealed .ritual-card:nth-child(3) {
+      transform: rotateY(180deg) scale(1.07);
+      background: linear-gradient(160deg, #4b3f69, #211b36);
+      box-shadow: 0 0 38px rgba(211,183,120,.2);
+    }
+    .ritual-deck.revealed::after {
+      content: "THE STAR";
+      position: absolute;
+      z-index: 3;
+      inset: 8px;
+      display: grid;
+      place-items: end center;
+      padding-bottom: 11px;
+      border: 1px solid rgba(211,183,120,.42);
+      border-radius: 8px;
+      color: var(--gold);
+      font: 600 9px/1 "DM Sans", sans-serif;
+      letter-spacing: .11em;
+      transform: rotateY(0);
+      animation: reveal-title .5s var(--ease) both .34s;
+    }
+    @keyframes reveal-title { from { opacity: 0; transform: scale(.8); } }
+    .shuffle-stage {
+      position: relative;
+      display: grid;
+      place-items: end center;
+      min-height: 360px;
+      padding: 24px 18px 22px;
+      overflow: hidden;
+      border: 1px solid rgba(211,183,120,.2);
+      border-radius: var(--r-xl);
+      background:
+        radial-gradient(circle at 50% 40%, rgba(169,148,237,.2), transparent 28%),
+        radial-gradient(circle at 50% 42%, rgba(211,183,120,.1), transparent 45%),
+        var(--glass);
+      perspective: 900px;
+    }
+    .shuffle-stage::before,
+    .shuffle-stage::after {
+      content: "";
+      position: absolute;
+      top: 44px;
+      left: 50%;
+      width: 230px;
+      height: 230px;
+      border: 1px solid rgba(214,204,255,.12);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .shuffle-stage::after {
+      width: 170px;
+      height: 170px;
+      top: 74px;
+      border-style: dashed;
+      animation: shuffle-orbit 8s linear infinite;
+    }
+    .shuffle-stage .ritual-deck {
+      top: 82px;
+      z-index: 2;
+      animation: deck-float 1.8s var(--ease) infinite alternate;
+    }
+    .ritual-deck.shuffling .ritual-card:nth-child(1) {
+      animation: shuffle-left 1.15s var(--ease) infinite;
+    }
+    .ritual-deck.shuffling .ritual-card:nth-child(2) {
+      animation: shuffle-right 1.15s var(--ease) infinite;
+    }
+    .ritual-deck.shuffling .ritual-card:nth-child(3) {
+      animation: shuffle-center 1.15s var(--ease) infinite;
+    }
+    .shuffle-copy {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      gap: 5px;
+      max-width: 280px;
+      text-align: center;
+    }
+    .shuffle-copy strong { color: var(--paper); font: 500 19px/1.2 "Newsreader", serif; }
+    .shuffle-copy span { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    @keyframes shuffle-orbit { to { transform: translateX(-50%) rotate(360deg); } }
+    @keyframes deck-float { to { translate: 0 -7px; } }
+    @keyframes shuffle-left {
+      0%, 100% { transform: translateX(-20px) rotate(-10deg); }
+      45% { transform: translateX(-58px) translateY(12px) rotate(-18deg); }
+      70% { transform: translateX(14px) translateY(-7px) rotate(4deg); }
+    }
+    @keyframes shuffle-right {
+      0%, 100% { transform: translateX(20px) rotate(10deg); }
+      45% { transform: translateX(58px) translateY(12px) rotate(18deg); }
+      70% { transform: translateX(-14px) translateY(-7px) rotate(-4deg); }
+    }
+    @keyframes shuffle-center {
+      0%, 100% { transform: translateY(-5px); }
+      50% { transform: translateY(-20px) rotateY(18deg); }
+    }
+    .ritual-aura {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      width: 110px;
+      height: 110px;
+      border: 1px solid rgba(211,183,120,.14);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      animation: aura-expand 3.4s ease-in-out infinite;
+    }
+    @keyframes aura-expand { 50% { transform: translateX(-50%) scale(1.38); opacity: .22; } }
+
     .filter-row {
       display: flex;
       gap: 8px;
@@ -523,7 +1005,22 @@
       background: var(--glass);
       cursor: pointer;
       transition: .2s var(--ease);
+      overflow: hidden;
     }
+    .reading-card::after {
+      content: "";
+      position: absolute;
+      top: -80%;
+      bottom: -80%;
+      left: -34%;
+      width: 18%;
+      opacity: 0;
+      background: rgba(255,255,255,.06);
+      transform: rotate(18deg);
+      transition: transform .65s var(--ease), opacity .2s ease;
+      pointer-events: none;
+    }
+    .reading-card:hover::after { opacity: 1; transform: translateX(650px) rotate(18deg); }
     .reading-card:hover, .expert-card:hover { transform: translateY(-2px); border-color: var(--stroke-strong); background: rgba(255,255,255,.075); }
     .reading-symbol {
       display: grid;
@@ -533,7 +1030,9 @@
       border-radius: 13px;
       background: var(--ink-800);
       color: var(--gold);
+      transition: transform .28s var(--ease), box-shadow .28s var(--ease);
     }
+    .reading-card:hover .reading-symbol { transform: scale(1.04) rotate(-2deg); box-shadow: 0 0 22px rgba(211,183,120,.11); }
     .reading-symbol svg { width: 31px; height: 31px; fill: none; stroke: currentColor; stroke-width: 1.35; }
     .chevron { color: var(--muted-2); font-size: 22px; }
     .reading-tag {
@@ -576,7 +1075,9 @@
       inset: 5px;
       border: 1px solid color-mix(in srgb, var(--accent, var(--violet)) 60%, transparent);
       border-radius: 50%;
+      animation: avatar-orbit 9s linear infinite;
     }
+    @keyframes avatar-orbit { 50% { transform: rotate(180deg) scale(.94); } to { transform: rotate(360deg); } }
     .avatar span { position: relative; z-index: 1; }
     .expert-name-row { display: flex; align-items: center; gap: 7px; }
     .ai-badge {
@@ -684,6 +1185,8 @@
     }
     .nav-item svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
     .nav-item.active { color: var(--paper); background: rgba(169,148,237,.12); }
+    .nav-item.active svg { animation: nav-breathe 2.8s ease-in-out infinite; filter: drop-shadow(0 0 5px rgba(169,148,237,.32)); }
+    @keyframes nav-breathe { 50% { transform: translateY(-1px) scale(1.06); } }
 
     .expert-detail, .chat-view {
       position: absolute;
@@ -868,6 +1371,270 @@
       animation: enter .3s var(--ease);
     }
     .funnel-stage.active { display: flex; }
+    .funnel-stage.content-stage {
+      flex-direction: column;
+      padding: 28px 20px 24px;
+      background: var(--ink-900);
+      color: var(--paper);
+    }
+    .funnel-stage.content-stage h2 {
+      margin: 8px 0 10px;
+      font: 500 28px/1.1 "Newsreader", serif;
+      color: var(--paper);
+    }
+    .funnel-stage.content-stage p { margin: 0 0 16px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .funnel-stage.content-stage .primary { margin-top: auto; }
+    .profile-setup-stage {
+      position: relative;
+      overflow-y: auto;
+      padding-bottom: 26px !important;
+    }
+    .profile-setup-stage .primary { margin-top: 18px !important; }
+    .profile-progress {
+      display: flex;
+      gap: 6px;
+      margin: 2px 0 18px;
+    }
+    .profile-progress span {
+      flex: 1;
+      height: 3px;
+      border-radius: 99px;
+      background: var(--ink-700);
+    }
+    .profile-progress span.on { background: var(--violet-2); }
+    .profile-form {
+      display: grid;
+      gap: 10px;
+    }
+    .profile-input,
+    .profile-trigger {
+      width: 100%;
+      min-height: 52px;
+      padding: 10px 13px;
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      background: var(--glass);
+      color: var(--paper);
+      text-align: left;
+    }
+    .profile-input {
+      outline: 0;
+      font-size: 12px;
+    }
+    .profile-input::placeholder { color: var(--muted-2); }
+    .profile-trigger small,
+    .profile-field-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted-2);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .profile-trigger strong { font-size: 12px; }
+    .profile-time-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: end;
+    }
+    .unknown-time {
+      min-height: 52px;
+      padding: 8px 11px;
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      background: transparent;
+      color: var(--paper-2);
+      font-size: 10px;
+    }
+    .unknown-time.selected {
+      border-color: var(--violet);
+      background: rgba(169,148,237,.15);
+    }
+    .gender-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .gender-option {
+      min-height: 42px;
+      padding: 8px;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      background: var(--glass);
+      color: var(--paper-2);
+      font-size: 10px;
+    }
+    .gender-option.selected {
+      border-color: var(--violet);
+      background: rgba(169,148,237,.15);
+      color: var(--paper);
+    }
+    .profile-consent {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 9px;
+      align-items: start;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1.45;
+    }
+    .profile-consent input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--violet);
+    }
+    .birth-picker-modal {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      display: none;
+      place-items: end center;
+      padding: 20px;
+      background: rgba(7,8,20,.72);
+      backdrop-filter: blur(7px);
+    }
+    .birth-picker-modal.open { display: grid; }
+    .birth-picker-card {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--stroke-strong);
+      border-radius: 22px;
+      background: var(--ink-800);
+      box-shadow: 0 24px 60px rgba(0,0,0,.42);
+      animation: sheet-up .28s var(--ease);
+    }
+    .birth-picker-card h3 { margin: 0 0 4px; font: 500 22px/1.1 "Newsreader", serif; }
+    .birth-picker-card > p { margin-bottom: 14px !important; font-size: 11px !important; }
+    .birth-picker-actions {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 9px;
+      margin-top: 14px;
+    }
+    .birth-picker-actions .primary { min-height: 46px; margin: 0 !important; }
+    .personalization-stage {
+      position: relative;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(169,148,237,.2), transparent 28%),
+        var(--ink-900) !important;
+    }
+    .sync-constellation {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 250px;
+      height: 250px;
+      margin-bottom: 26px;
+    }
+    .sync-ring {
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(214,204,255,.24);
+      border-radius: 50%;
+      animation: sync-spin 7s linear infinite;
+    }
+    .sync-ring:nth-child(2) {
+      inset: 45px;
+      border-style: dashed;
+      animation-direction: reverse;
+      animation-duration: 5s;
+    }
+    .sync-ring::before,
+    .sync-ring::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 18px rgba(211,183,120,.7);
+    }
+    .sync-ring::before { top: 16px; left: 28px; }
+    .sync-ring::after { right: 18px; bottom: 38px; background: var(--violet-2); }
+    .sync-core {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 116px;
+      height: 116px;
+      border: 1px solid rgba(211,183,120,.45);
+      border-radius: 34px;
+      background: rgba(169,148,237,.1);
+      box-shadow: 0 0 54px rgba(169,148,237,.2);
+    }
+    .sync-core::before {
+      content: "";
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 30px rgba(211,183,120,.28);
+    }
+    .sync-core::after {
+      content: "";
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--ink-850);
+      transform: translate(16px, -6px);
+    }
+    .sync-spark {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--paper);
+      animation: sparkle 1.8s ease-in-out infinite alternate;
+      box-shadow:
+        84px -62px var(--gold),
+        -92px -34px var(--violet-2),
+        104px 42px var(--paper),
+        -74px 78px var(--gold),
+        24px 112px var(--violet-2);
+    }
+    .sync-percent {
+      font: 500 52px/1 "Newsreader", serif;
+      color: var(--paper);
+    }
+    .sync-status {
+      min-height: 20px;
+      margin: 10px auto 20px !important;
+      color: var(--muted) !important;
+    }
+    .sync-track {
+      width: min(100%, 330px);
+      height: 5px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: var(--ink-700);
+    }
+    .sync-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--violet), var(--gold), var(--paper));
+      box-shadow: 0 0 18px rgba(211,183,120,.45);
+      transition: width .18s linear;
+    }
+    .sync-privacy {
+      max-width: 300px;
+      margin-top: 18px !important;
+      font-size: 9px !important;
+      color: var(--muted-2) !important;
+    }
+    @keyframes sync-spin { to { transform: rotate(360deg); } }
+    @keyframes sparkle {
+      to { transform: scale(1.7); opacity: .35; }
+    }
     .splash-stage {
       position: relative;
       flex-direction: column;
@@ -1368,6 +2135,345 @@
       font-weight: 700;
     }
 
+    .stack {
+      position: absolute;
+      inset: 0;
+      z-index: 36;
+      display: none;
+      background:
+        radial-gradient(circle at 30% -5%, rgba(169,148,237,.17), transparent 27%),
+        var(--ink-900);
+      color: var(--paper);
+      overflow: hidden;
+    }
+    .stack.open { display: block; }
+    .stack-screen {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+      overflow: auto;
+      padding: 54px 18px 28px;
+    }
+    .stack-screen.active { display: flex; animation: rise .24s var(--ease); }
+    .stack .reading-card:not(:has(.reading-symbol)) {
+      grid-template-columns: minmax(0, 1fr) 22px;
+    }
+    .stack .reading-card h3 { color: var(--paper); }
+    .stack-head .icon-button { font-size: 22px; color: var(--paper); }
+    @keyframes rise { from { transform: translateY(10px); opacity: 0; } }
+    .stack-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stack-head h2 {
+      flex: 1;
+      margin: 0;
+      font: 500 22px/1.1 "Newsreader", serif;
+      color: var(--paper);
+    }
+    .stack-head small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font: 500 10px/1.3 "DM Sans", sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .stack p { margin: 0; color: var(--muted); font-size: 12.2px; line-height: 1.6; }
+    .form-field { display: grid; gap: 6px; }
+    .form-field span { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .form-field input, .form-field textarea, .form-field select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      background: var(--ink-800);
+      color: var(--paper);
+      font: 500 13px/1.4 "DM Sans", sans-serif;
+    }
+    .form-field textarea { min-height: 110px; resize: vertical; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .prompt-options {
+      display: grid;
+      gap: 8px;
+    }
+    .prompt-option {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 50px;
+      padding: 10px 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      background: var(--glass);
+      color: var(--paper-2);
+      text-align: left;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .prompt-option::before {
+      content: "✦";
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(169,148,237,.14);
+      color: var(--violet-2);
+    }
+    .prompt-option.selected {
+      border-color: rgba(211,183,120,.62);
+      background: rgba(211,183,120,.1);
+      color: var(--paper);
+    }
+    .chip {
+      min-height: 34px;
+      padding: 7px 11px;
+      border: 1px solid var(--stroke-strong);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--paper-2);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .chip.on, .chip[aria-pressed="true"] { background: var(--paper); color: var(--ink-900); border-color: var(--paper); }
+    .toggle-row, .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--stroke);
+    }
+    .toggle-row span, .setting-row span { font-size: 13px; font-weight: 700; color: var(--paper); }
+    .toggle-row small, .setting-row small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      background: var(--ink-800);
+      color: var(--paper);
+    }
+    .price-card {
+      display: grid;
+      gap: 6px;
+      padding: 14px;
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      background: var(--ink-800);
+      color: var(--paper);
+      text-align: left;
+    }
+    .status-card {
+      display: grid;
+      gap: 10px;
+      padding: 22px 16px;
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      background: var(--ink-800);
+      text-align: center;
+      color: var(--paper);
+    }
+    .dialog-card {
+      width: 100%;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--paper);
+      color: var(--ink-900);
+      box-shadow: 0 24px 60px rgba(0,0,0,.28);
+    }
+    .dialog-card h3 { margin: 0 0 8px; font: 500 22px/1.15 "Newsreader", serif; color: var(--ink-900); }
+    .dialog-card p { margin: 0 0 14px; color: #5c5870; font-size: 13px; line-height: 1.55; }
+    .dialog-card .text-button { color: #5c5870; }
+    .sheet {
+      position: absolute;
+      z-index: 48;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: none;
+      padding: 10px 16px 22px;
+      border-radius: 22px 22px 0 0;
+      background: var(--paper);
+      color: var(--ink-900);
+      box-shadow: 0 -20px 50px rgba(20,16,28,.28);
+    }
+    .sheet h3 { margin: 0 0 8px; font: 500 20px/1.2 "Newsreader", serif; color: var(--ink-900); }
+    .sheet p { color: #5c5870; font-size: 13px; }
+    .sheet.open { display: block; animation: sheet-up .26s var(--ease); }
+    .sheet-handle {
+      width: 42px;
+      height: 4px;
+      margin: 4px auto 12px;
+      border-radius: 99px;
+      background: #d8d3e4;
+    }
+    .switch {
+      width: 42px;
+      height: 24px;
+      border: 0;
+      border-radius: 999px;
+      background: #d7d3e2;
+      position: relative;
+    }
+    .switch.on { background: var(--gold-deep); }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      transition: transform .2s var(--ease);
+    }
+    .switch.on::after { transform: translateX(18px); }
+    .timeline { display: grid; gap: 10px; }
+    .price-card.on { border-color: var(--gold-deep); box-shadow: inset 0 0 0 1px var(--gold-deep); }
+    .price-card strong { font-size: 16px; }
+    .price-card em { color: var(--gold); font-style: normal; font-weight: 800; }
+    @keyframes sheet-up { from { transform: translateY(24px); opacity: 0; } }
+    .dialog {
+      position: absolute;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(18,14,24,.46);
+    }
+    .dialog.open { display: grid; }
+    .ad-slot {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px dashed rgba(126,110,90,.35);
+      border-radius: 14px;
+      background: rgba(255,255,255,.42);
+    }
+    .ad-slot.fail { display: none; }
+    .ad-slot.shimmer { position: relative; overflow: hidden; min-height: 72px; }
+    .ad-slot.shimmer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+      animation: shimmer 1.2s linear infinite;
+    }
+    @keyframes shimmer { from { transform: translateX(-60%); } to { transform: translateX(60%); } }
+    .banner-collapse {
+      display: none;
+      margin: 10px 18px 0;
+      min-height: 50px;
+    }
+    .banner-collapse.show { display: grid; }
+    .status-card {
+      display: grid;
+      gap: 10px;
+      padding: 22px 16px;
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      background: var(--paper);
+      text-align: center;
+    }
+    .qa-ribbon {
+      position: absolute;
+      z-index: 70;
+      top: 8px;
+      right: 10px;
+      left: 10px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      pointer-events: none;
+    }
+    .qa-ribbon button {
+      pointer-events: auto;
+      min-height: 24px;
+      padding: 4px 8px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(18,14,24,.72);
+      color: #f6f1e8;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .debug-note {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(214,204,255,.18);
+      color: var(--muted);
+      font-size: 10px;
+    }
+    .skeleton {
+      height: 12px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #ece8f4, #f7f4ee, #ece8f4);
+      background-size: 200% 100%;
+      animation: shimmer 1.1s linear infinite;
+    }
+    .moon-illum {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 30%, #fff8e8 0 18%, transparent 19%),
+        linear-gradient(90deg, #1b1424 46%, #f4ead2 46%);
+      box-shadow: 0 0 24px rgba(244, 234, 210, .35);
+    }
+    .orbit {
+      width: 120px;
+      height: 120px;
+      margin: 8px auto;
+      border: 1px dashed rgba(169,148,237,.45);
+      border-radius: 50%;
+      position: relative;
+    }
+    .orbit span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      margin: -6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: orbit 8s linear infinite;
+    }
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(54px); }
+      to { transform: rotate(360deg) translateX(54px); }
+    }
+    .card-3d {
+      width: 118px;
+      height: 178px;
+      margin: 8px auto;
+      border-radius: 12px;
+      background:
+        linear-gradient(160deg, rgba(214,204,255,.5), transparent 42%),
+        linear-gradient(#2a2236, #17131f);
+      color: #f6f1e8;
+      display: grid;
+      place-items: center;
+      transform: rotateY(12deg) rotateX(6deg);
+      box-shadow: 18px 18px 30px rgba(20,14,24,.28);
+      animation: card-tilt 2.4s var(--ease) infinite alternate;
+    }
+    @keyframes card-tilt {
+      to { transform: rotateY(-12deg) rotateX(4deg); }
+    }
+    .pressable:active { transform: scale(.98); }
     .toast {
       position: absolute;
       z-index: 60;
@@ -1387,6 +2493,37 @@
     }
     .toast.show { display: block; animation: toast .28s var(--ease); }
     @keyframes toast { from { transform: translateY(8px); opacity: 0; } }
+
+    .effect-ripple {
+      position: fixed;
+      z-index: 90;
+      width: 12px;
+      height: 12px;
+      margin: -6px;
+      border: 1px solid rgba(214,204,255,.75);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: ripple-out .72s var(--ease) forwards;
+    }
+    @keyframes ripple-out {
+      to { transform: scale(5.2); opacity: 0; border-width: .3px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+      .star-layer, .nebula, .shooting-star { display: none; }
+      .entrance-ready > .entrance-item {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        animation: none !important;
+      }
+    }
 
     @media (max-width: 1050px) {
       .app-shell { grid-template-columns: minmax(390px, 460px) minmax(250px, 320px); }
@@ -1431,13 +2568,13 @@
   <main class="app-shell">
     <aside class="brief">
       <p class="eyebrow">AstroDaily · Redesign 01</p>
-      <h1>Một khoảng lặng có ý nghĩa, mỗi ngày.</h1>
-      <p class="lead">Trải nghiệm mới kết hợp Tarot, chiêm tinh và đối thoại cùng chuyên gia AI thành một hành trình tự phản chiếu rõ ràng, riêng tư và có trách nhiệm.</p>
+      <h1>A meaningful moment of stillness, every day.</h1>
+      <p class="lead">A new experience bringing Tarot, astrology, and AI-guided conversations together in a clear, private, and responsible journey of self-reflection.</p>
       <div class="principles">
-        <div class="principle"><span>01</span>Daily ritual thay cho menu tính năng</div>
-        <div class="principle"><span>02</span>Insight có thể hành động</div>
-        <div class="principle"><span>03</span>AI minh bạch, không giả danh con người</div>
-        <div class="principle"><span>04</span>Monetization sau value moment</div>
+        <div class="principle"><span>01</span>A daily ritual, not a feature menu</div>
+        <div class="principle"><span>02</span>Actionable insight</div>
+        <div class="principle"><span>03</span>Transparent AI, never presented as human</div>
+        <div class="principle"><span>04</span>Monetization after a moment of value</div>
       </div>
       <div class="prototype-label">Interactive HTML prototype</div>
     </aside>
@@ -1445,6 +2582,13 @@
     <section class="phone" aria-label="AstroDaily mobile prototype">
       <div class="status"><span>9:41</span><span class="status-icons"><i></i><i></i></span></div>
       <div class="phone-screen">
+        <div class="ambient-space" aria-hidden="true">
+          <div class="star-layer far"></div>
+          <div class="star-layer"></div>
+          <div class="nebula one"></div>
+          <div class="nebula two"></div>
+          <div class="shooting-star"></div>
+        </div>
         <section class="pre-funnel" id="preFunnel" aria-label="AstroDaily first-run funnel">
           <article class="funnel-stage splash-stage active" data-funnel-stage="splash">
             <div class="splash-brand">
@@ -1453,29 +2597,29 @@
               <p>Tarot · Astrology · Reflection</p>
             </div>
             <div class="splash-bottom">
-              <div class="splash-progress" aria-label="Đang chuẩn bị"></div>
-              <div class="native-ad-slot splash-ad waiting" aria-label="Native hoặc banner splash do BBL Funnel quản lý">
-                <span class="native-ad-label">AD</span><span class="placement-name">native_splash phủ trên banner_splash khi có fill</span>
+              <div class="splash-progress" aria-label="Getting things ready"></div>
+              <div class="native-ad-slot splash-ad waiting" aria-label="Splash native ad or banner managed by BBL Funnel">
+                <span class="native-ad-label">AD</span><span class="placement-name">native_splash overlays banner_splash when filled</span>
                 <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
               </div>
             </div>
           </article>
 
           <article class="funnel-stage inter-stage" data-funnel-stage="splash-inter">
-            <div class="ad-topline"><span>Quảng cáo · inter_splash</span><button class="ad-close" id="closeSplashInter" aria-label="Đóng quảng cáo">×</button></div>
-            <div class="inter-creative"><div><strong>Splash interstitial</strong><span>Sau khi consent và AdsLoader sẵn sàng, BBL Funnel gọi interstitial. Đóng hoặc load fail đều tiếp tục sang Language.</span></div></div>
-            <button class="full-ad-button" data-toast="Minh hoạ CTA thuộc creative quảng cáo.">Ad call to action</button>
+            <div class="ad-topline"><span>Advertisement · inter_splash</span><button class="ad-close" id="closeSplashInter" aria-label="Close advertisement">×</button></div>
+            <div class="inter-creative"><div><strong>Splash interstitial</strong><span>Once consent is resolved and AdsLoader is ready, BBL Funnel requests the interstitial. Closing it or a load failure continues to Language.</span></div></div>
+            <button class="full-ad-button" data-toast="Illustration of the ad creative CTA.">Ad call to action</button>
           </article>
 
           <article class="funnel-stage language-stage" data-funnel-stage="language">
-            <header class="language-title no-back"><h2>Chọn ngôn ngữ</h2></header>
+            <header class="language-title no-back"><h2>Choose your language</h2></header>
             <div class="native-ad-slot language-ad small" aria-label="Top native language">
               <span class="native-ad-label">AD</span><span class="placement-name" id="languageTopPlacement">native_language_small</span>
               <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
             </div>
-            <div class="language-list" id="languageList" aria-label="Danh sách ngôn ngữ"></div>
+            <div class="language-list" id="languageList" aria-label="Language list"></div>
             <div class="language-bottom">
-              <button class="language-confirm" id="languageConfirm" disabled>Xác nhận</button>
+              <button class="language-confirm" id="languageConfirm" disabled>Confirm</button>
               <div class="native-ad-slot language-ad full" aria-label="Bottom native language">
                 <span class="native-ad-label">AD</span><span class="placement-name" id="languageBottomPlacement">native_language_full</span>
                 <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
@@ -1485,21 +2629,136 @@
 
           <article class="funnel-stage language-stage" data-funnel-stage="language-sub">
             <header class="language-title">
-              <button class="icon-button" id="languageBack" aria-label="Quay lại chọn ngôn ngữ">‹</button>
+              <button class="icon-button" id="languageBack" aria-label="Back to language selection">‹</button>
               <h2 id="languageSubTitle">English</h2><span></span>
             </header>
             <div class="native-ad-slot language-ad small" aria-label="Top native language sub">
               <span class="native-ad-label">AD</span><span class="placement-name" id="languageSubTopPlacement">native_language_sub_small</span>
               <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
             </div>
-            <div class="language-list" id="languageSubList" aria-label="Danh sách biến thể ngôn ngữ"></div>
+            <div class="language-list" id="languageSubList" aria-label="Language variant list"></div>
             <div class="language-bottom">
-              <button class="language-confirm" id="languageSubConfirm" disabled>Xác nhận</button>
+              <button class="language-confirm" id="languageSubConfirm" disabled>Confirm</button>
               <div class="native-ad-slot language-ad full" aria-label="Bottom native language sub">
                 <span class="native-ad-label">AD</span><span class="placement-name" id="languageSubBottomPlacement">native_language_sub_full</span>
                 <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
               </div>
             </div>
+          </article>
+
+          <article class="funnel-stage content-stage profile-setup-stage" data-funnel-stage="profile-setup">
+            <div class="profile-progress" aria-label="Profile setup step 1 of 2"><span class="on"></span><span></span></div>
+            <p class="section-kicker">Your celestial profile</p>
+            <h2>Make your sky personal.</h2>
+            <p>Your birth date, exact time, and birthplace improve natal chart and transit calculations. Gender is optional and is never used to calculate your chart or Tarot reading.</p>
+            <div class="profile-form">
+              <button class="profile-trigger pressable" id="birthDateTrigger" data-open-birth-picker>
+                <small>Date of birth</small>
+                <strong id="birthDateSummary">Select day, month, and year</strong>
+              </button>
+              <label>
+                <span class="profile-field-label">Birthplace</span>
+                <input class="profile-input" id="onboardingBirthPlace" autocomplete="off" placeholder="City, country" />
+              </label>
+              <div class="profile-time-row">
+                <label>
+                  <span class="profile-field-label">Exact birth time</span>
+                  <input class="profile-input" id="onboardingBirthTime" type="time" />
+                </label>
+                <button class="unknown-time" data-birth-time-unknown>I don't know</button>
+              </div>
+              <div>
+                <span class="profile-field-label">Gender · Optional</span>
+                <div class="gender-options" aria-label="Gender">
+                  <button class="gender-option" data-gender="woman">Woman</button>
+                  <button class="gender-option" data-gender="man">Man</button>
+                  <button class="gender-option" data-gender="nonbinary">Non-binary</button>
+                  <button class="gender-option" data-gender="private">Prefer not to say</button>
+                </div>
+              </div>
+              <label class="profile-consent">
+                <input id="profileSyncConsent" type="checkbox" />
+                <span>Securely sync my profile so AstroDaily can personalize astrology and remember my preferences. I can delete this data in Privacy.</span>
+              </label>
+            </div>
+            <button class="primary" id="createCelestialProfile" data-start-personalization disabled>Create my celestial profile</button>
+            <button class="text-button" data-start-personalization-skip style="margin-top:12px">Skip for now</button>
+
+            <div class="birth-picker-modal" id="birthPickerModal" role="dialog" aria-modal="true" aria-label="Select date of birth">
+              <div class="birth-picker-card">
+                <div class="sheet-handle"></div>
+                <h3>Select your date of birth</h3>
+                <p>Choose all three fields, then confirm.</p>
+                <div class="ob-date">
+                  <div class="ob-field"><label for="birthDay">Day</label><select id="birthDay"><option value="">Day</option></select></div>
+                  <div class="ob-field"><label for="birthMonth">Month</label><select id="birthMonth"><option value="">Month</option></select></div>
+                  <div class="ob-field"><label for="birthYear">Year</label><select id="birthYear"><option value="">Year</option></select></div>
+                </div>
+                <div class="birth-picker-actions">
+                  <button class="text-button" data-close-birth-picker>Cancel</button>
+                  <button class="primary" id="confirmBirthDate" data-confirm-birth-date disabled>Use this date</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="funnel-stage inter-stage" data-funnel-stage="exit-inter">
+            <div class="ad-topline"><span>Advertisement · inter_onboarding</span><button class="ad-close" data-funnel-next="profile-setup" aria-label="Close advertisement">×</button></div>
+            <div class="inter-creative"><div><strong>Exit interstitial</strong><span>An interstitial may appear after onboarding. Closing it or a no-fill continues to optional profile setup.</span></div></div>
+            <button class="full-ad-button" data-funnel-next="profile-setup">Ad call to action</button>
+          </article>
+
+          <article class="funnel-stage content-stage personalization-stage" data-funnel-stage="personalization-loading">
+            <div class="profile-progress" style="position:absolute;top:42px;right:20px;left:20px" aria-label="Profile setup step 2 of 2"><span class="on"></span><span class="on"></span></div>
+            <div class="sync-constellation" aria-hidden="true">
+              <div class="sync-ring"></div><div class="sync-ring"></div>
+              <div class="sync-core"></div><div class="sync-spark"></div>
+            </div>
+            <div class="sync-percent"><span id="syncPercent">0</span>%</div>
+            <h2 id="syncTitle">Creating your celestial profile</h2>
+            <p class="sync-status" id="syncStatus">Preparing your birth data…</p>
+            <div class="sync-track" role="progressbar" aria-label="Profile personalization progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="sync-bar" id="syncBar"></div>
+            </div>
+            <p class="sync-privacy">Prototype QA: this animation simulates an encrypted server sync. Production must advance from the real API response, not a fake timer.</p>
+          </article>
+
+          <article class="funnel-stage content-stage" data-funnel-stage="welcome-back">
+            <p class="section-kicker">Welcome back</p>
+            <h2>Welcome back.</h2>
+            <p>Today's Cosmic Brief is ready. The native ad below is a BBL Funnel gate and fails open if there is no fill.</p>
+            <div class="native-ad-slot" aria-label="native_welcome_back">
+              <span class="native-ad-label">AD</span><span class="placement-name">native_welcome_back</span>
+              <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+            </div>
+            <button class="primary" data-funnel-next="welcome-inter" style="margin-top:18px">Continue</button>
+          </article>
+
+          <article class="funnel-stage inter-stage" data-funnel-stage="welcome-inter">
+            <div class="ad-topline"><span>Advertisement · app_open_resume</span><button class="ad-close" data-funnel-next="today" aria-label="Close advertisement">×</button></div>
+            <div class="inter-creative"><div><strong>Welcome-back interstitial</strong><span>App-open/resume interstitial. Close it to enter Today.</span></div></div>
+            <button class="full-ad-button" data-funnel-next="today">Ad call to action</button>
+          </article>
+
+          <article class="funnel-stage content-stage" data-funnel-stage="uninstall-warn">
+            <p class="section-kicker">Before you go</p>
+            <h2>You're about to open the system uninstall screen.</h2>
+            <p>You can turn off notifications, change the language, or keep using the free ad-supported version. There are no penalties or misleading claims about data loss.</p>
+            <button class="primary" data-open="settings">Stay and open Settings</button>
+            <button class="text-button" data-funnel-next="uninstall-reason" style="margin-top:12px">Continue to uninstall</button>
+          </article>
+
+          <article class="funnel-stage content-stage" data-funnel-stage="uninstall-reason">
+            <p class="section-kicker">Optional feedback</p>
+            <h2>What made you decide to leave?</h2>
+            <div class="ob-options" style="margin-bottom:18px">
+              <button class="ob-option" data-uninstall-reason="ads">Too many ads</button>
+              <button class="ob-option" data-uninstall-reason="relevance">The content is not relevant</button>
+              <button class="ob-option" data-uninstall-reason="privacy">Privacy concerns</button>
+              <button class="ob-option" data-uninstall-reason="other">Another reason</button>
+            </div>
+            <button class="primary" data-open="system-uninstall">Open system settings</button>
+            <button class="text-button" data-funnel-next="today" style="margin-top:12px">Back to Today</button>
           </article>
         </section>
 
@@ -1511,71 +2770,68 @@
                 <div class="ob-orbit"></div><div class="ob-orbit"></div><div class="ob-star"></div>
                 <div class="ob-card"><div class="moon"></div></div>
               </div>
-              <p class="section-kicker">Một khoảng lặng dành cho bạn</p>
-              <h2>Hiểu mình rõ hơn, mỗi ngày một chút.</h2>
-              <p>Tarot, chiêm tinh và những cuộc trò chuyện có định hướng giúp bạn nhìn rõ cảm xúc và bước tiếp theo.</p>
+              <p class="section-kicker">A moment of stillness for you</p>
+              <h2>Understand yourself a little better each day.</h2>
+              <p>Tarot, astrology, and guided conversations help you understand your feelings and see your next step more clearly.</p>
             </div>
-            <div class="native-ad-slot" aria-label="Vị trí quảng cáo native do BBL Funnel quản lý">
+            <div class="native-ad-slot" aria-label="Native ad placement managed by BBL Funnel">
               <span class="native-ad-label">AD</span>
               <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
             </div>
-            <div class="ob-indicator" aria-label="Trang 1 trên 5"></div>
-            <button class="ob-next">Tiếp tục</button>
+            <div class="ob-indicator" aria-label="Page 1 of 5"></div>
+            <button class="ob-next">Continue</button>
             <div class="ob-bottom-space"></div>
           </article>
 
           <article class="ob-page ob-full-ad" data-ob-page="1">
-            <div class="ad-topline"><span>Nội dung được tài trợ</span><button class="ad-close" aria-label="Đóng quảng cáo">×</button></div>
-            <div class="full-ad-creative"><div><strong>Full native placement</strong><span>Trang này do BBL Funnel và Ads SDK render. Product UI không thay đổi bố cục hoặc chrome quảng cáo.</span></div></div>
-            <button class="full-ad-button" data-toast="Minh hoạ vị trí CTA của quảng cáo.">Ad call to action</button>
+            <div class="ad-topline"><span>Sponsored content</span><button class="ad-close" aria-label="Close advertisement">×</button></div>
+            <div class="full-ad-creative"><div><strong>Full native placement</strong><span>This page is rendered by BBL Funnel and the Ads SDK. The product UI does not alter the ad layout or chrome.</span></div></div>
+            <button class="full-ad-button" data-toast="Illustration of the ad CTA placement.">Ad call to action</button>
           </article>
 
           <article class="ob-page content-page" data-ob-page="2">
-            <div class="ob-main ob-question">
-              <p class="section-kicker">Cá nhân hoá trải nghiệm</p>
-              <h2>Điều gì đưa bạn đến AstroDaily?</h2>
-              <p>Câu trả lời sẽ ưu tiên reading và chuyên gia phù hợp. Bạn có thể thay đổi bất kỳ lúc nào.</p>
-              <div class="ob-options" role="radiogroup" aria-label="Mục tiêu sử dụng">
-                <button class="ob-option" role="radio" aria-checked="false" data-goal="clarity"><svg><use href="#i-spark"/></svg>Làm rõ một tình huống</button>
-                <button class="ob-option" role="radio" aria-checked="false" data-goal="love"><svg><use href="#i-heart"/></svg>Tình yêu &amp; mối quan hệ</button>
-                <button class="ob-option" role="radio" aria-checked="false" data-goal="career"><svg><use href="#i-compass"/></svg>Sự nghiệp &amp; hướng đi</button>
-                <button class="ob-option" role="radio" aria-checked="false" data-goal="self"><svg><use href="#i-user"/></svg>Hiểu bản thân sâu hơn</button>
+            <div class="ob-brand">AstroDaily</div>
+            <div class="ob-main">
+              <div class="ob-art" aria-hidden="true">
+                <div class="ob-orbit"></div><div class="ob-orbit"></div><div class="ob-star"></div>
+                <div class="ob-card" style="transform:translateX(-50%) rotate(-5deg)"><div class="moon"></div></div>
               </div>
+              <p class="section-kicker">Astrology meets Tarot</p>
+              <h2>Read the sky. Reflect with the cards.</h2>
+              <p>Astrology gives you context for timing and patterns. Tarot helps you ask better questions and choose your next step.</p>
             </div>
-            <div class="native-ad-slot" aria-label="Vị trí quảng cáo native do BBL Funnel quản lý">
+            <div class="native-ad-slot" aria-label="Native ad placement managed by BBL Funnel">
               <span class="native-ad-label">AD</span>
               <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
             </div>
-            <div class="ob-indicator" aria-label="Trang 3 trên 5"></div>
-            <button class="ob-next" disabled>Tiếp tục</button>
+            <div class="ob-indicator" aria-label="Page 3 of 5"></div>
+            <button class="ob-next">Continue</button>
             <div class="ob-bottom-space"></div>
           </article>
 
           <article class="ob-page ob-full-ad" data-ob-page="3">
-            <div class="ad-topline"><span>Nội dung được tài trợ</span><button class="ad-close" aria-label="Đóng quảng cáo">×</button></div>
-            <div class="full-ad-creative"><div><strong>Full native placement</strong><span>Page indicator, Next button và inline content được ẩn đúng theo contract của BBL Funnel.</span></div></div>
-            <button class="full-ad-button" data-toast="Minh hoạ vị trí CTA của quảng cáo.">Ad call to action</button>
+            <div class="ad-topline"><span>Sponsored content</span><button class="ad-close" aria-label="Close advertisement">×</button></div>
+            <div class="full-ad-creative"><div><strong>Full native placement</strong><span>The page indicator, Next button, and inline content are hidden as required by the BBL Funnel contract.</span></div></div>
+            <button class="full-ad-button" data-toast="Illustration of the ad CTA placement.">Ad call to action</button>
           </article>
 
           <article class="ob-page content-page" data-ob-page="4">
-            <div class="ob-main ob-question">
-              <p class="section-kicker">Bầu trời của riêng bạn</p>
-              <h2>Ngày sinh của bạn là khi nào?</h2>
-              <p>Thông tin này giúp xác định cung Mặt Trời và cá nhân hoá horoscope. Không cần giờ sinh ở bước này.</p>
-              <div class="ob-date">
-                <div class="ob-field"><label for="birthDay">Ngày</label><select id="birthDay"><option value="">Chọn</option></select></div>
-                <div class="ob-field"><label for="birthMonth">Tháng</label><select id="birthMonth"><option value="">Chọn</option></select></div>
-                <div class="ob-field"><label for="birthYear">Năm</label><select id="birthYear"><option value="">Chọn</option></select></div>
+            <div class="ob-brand">AstroDaily</div>
+            <div class="ob-main">
+              <div class="ob-art" aria-hidden="true">
+                <div class="ob-orbit"></div><div class="ob-orbit"></div><div class="ob-star"></div>
+                <div class="ob-card"><div class="moon"></div></div>
               </div>
-              <div class="ob-privacy"><svg><use href="#i-check"/></svg><span>Được lưu trên thiết bị để cá nhân hoá. Bạn có thể sửa hoặc xoá trong Hồ sơ.</span></div>
-              <button class="text-button" style="margin-top:18px" data-skip-birth>Để sau</button>
+              <p class="section-kicker">A practice that grows with you</p>
+              <h2>Notice patterns, not predictions.</h2>
+              <p>Save reflections in your private Journal and talk with scoped AI guides when you want to explore a theme more deeply.</p>
             </div>
-            <div class="native-ad-slot" aria-label="Vị trí quảng cáo native do BBL Funnel quản lý">
+            <div class="native-ad-slot" aria-label="Native ad placement managed by BBL Funnel">
               <span class="native-ad-label">AD</span>
               <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
             </div>
-            <div class="ob-indicator" aria-label="Trang 5 trên 5"></div>
-            <button class="ob-next" disabled>Bắt đầu hành trình</button>
+            <div class="ob-indicator" aria-label="Page 5 of 5"></div>
+            <button class="ob-next">Finish onboarding</button>
             <div class="ob-bottom-space"></div>
           </article>
         </section>
@@ -1583,189 +2839,282 @@
         <section class="view active" data-view="today">
           <header class="topbar">
             <div class="brand">AstroDaily</div>
-            <button class="icon-button" aria-label="Thông báo" data-toast="Bạn chưa có lời nhắc mới.">
-              <svg><use href="#i-bell"/></svg>
+            <button class="icon-button" aria-label="Open profile" data-view-target="profile">
+              <svg><use href="#i-user"/></svg>
             </button>
           </header>
 
-          <p class="section-kicker">Thứ Tư, 23 tháng 9</p>
-          <h2 class="display">Chào buổi tối.</h2>
-          <p class="subcopy">Dành một phút để trở về với điều đang thực sự quan trọng.</p>
+          <p class="section-kicker">Today · Sample content</p>
+          <h2 class="display">Today's sky.</h2>
+          <p class="subcopy">A concise guide to today’s astrological rhythms and what may matter most to you.</p>
 
-          <article class="daily-hero">
-            <div class="hero-meta"><span>Lá bài hôm nay</span><span>Chưa mở</span></div>
-            <div class="tarot-card" aria-hidden="true">
-              <div class="inner"><div class="star-field"></div><div class="moon"></div></div>
+          <article class="cosmic-hero">
+            <div class="cosmic-copy">
+              <p class="section-kicker" id="homeZodiacName">Cosmic Brief · Sample data</p>
+              <h3>Pause before drawing conclusions.</h3>
+              <p>The Moon highlights emotional balance, while Mercury encourages you to ask for clarity instead of making assumptions.</p>
             </div>
-            <button class="hero-action" data-toast="Prototype: bắt đầu nghi thức reveal lá bài theo ngày.">
-              <span>Mở thông điệp hôm nay</span><svg><use href="#i-arrow"/></svg>
+            <svg class="chart-wheel" viewBox="0 0 220 220" aria-hidden="true">
+              <circle cx="110" cy="110" r="92"/><circle cx="110" cy="110" r="66"/><circle cx="110" cy="110" r="37"/>
+              <line x1="110" y1="18" x2="110" y2="202"/><line x1="18" y1="110" x2="202" y2="110"/>
+              <line x1="45" y1="45" x2="175" y2="175"/><line x1="175" y1="45" x2="45" y2="175"/>
+              <path d="M110 18 143 51 110 73 77 51Z"/><path d="M202 110 169 143 147 110 169 77Z"/>
+              <circle class="planet" cx="146" cy="61" r="6"/><circle class="accent-planet" cx="64" cy="147" r="5"/>
+              <circle class="planet" cx="163" cy="150" r="3"/>
+            </svg>
+            <button class="cosmic-action" data-open="cosmic-brief">
+              <span>View detailed interpretation</span><svg width="18" height="18"><use href="#i-arrow"/></svg>
             </button>
           </article>
 
-          <div class="section-head"><h2>Bầu trời của bạn</h2><button class="text-button" data-toast="Mở chi tiết horoscope theo ngày, tuần, tháng.">Xem chi tiết</button></div>
-          <article class="insight-card">
-            <div class="zodiac-mark" id="homeZodiacSymbol">✦</div>
-            <div><h3 id="homeZodiacName">Horoscope của bạn · Hôm nay</h3><p>Một cuộc trò chuyện chân thành có thể làm rõ điều bạn đang phân vân.</p></div>
-            <div class="score">4.2</div>
-          </article>
+          <div class="section-head"><h2>Today's rhythms</h2><button class="text-button" data-view-target="astrology">All</button></div>
+          <div class="celestial-grid">
+            <article class="celestial-card pressable" role="button" tabindex="0" data-open="moon-detail">
+              <p class="section-kicker">Moon phase · Demo</p><div class="metric">72%</div><h3>Waning Moon</h3><p>Conserve your energy and complete what remains unfinished.</p><div class="phase-art"></div>
+            </article>
+            <article class="celestial-card pressable" role="button" tabindex="0" data-open="transit-today">
+              <p class="section-kicker">Transit · Demo</p><div class="metric">☿ △ ♃</div><h3>Mercury trine Jupiter</h3><p>Supportive for learning and big-picture conversations.</p>
+            </article>
+            <article class="celestial-card wide pressable" role="button" tabindex="0" data-open="daily-tarot">
+              <div class="mini-card-art"></div>
+              <div><p class="section-kicker">Tarot reflection</p><h3>Today's card is waiting for you</h3><p>An additional layer of reflection to complement—not replace—your Cosmic Brief.</p></div>
+              <span class="chevron">›</span>
+            </article>
+          </div>
 
           <article class="reflection">
             <small>Reflection prompt</small>
-            <p>Điều gì đang cần được nhìn nhận thành thật hơn?</p>
-            <button data-view-target="journal">Viết vài dòng trong Journal</button>
+            <p>What deserves a more honest look?</p>
+            <button data-open="reflection">Write a few lines in your Journal</button>
           </article>
 
-          <div class="section-head"><h2>Trò chuyện sâu hơn</h2><button class="text-button" data-view-target="experts">Tất cả</button></div>
+          <div class="section-head"><h2>Go deeper in conversation</h2><button class="text-button" data-view-target="experts">All</button></div>
           <article class="chat-promo">
-            <p class="section-kicker">Chuyên gia AI đồng hành</p>
-            <h3>Gỡ rối một lựa chọn cùng An Nhiên</h3>
-            <p>Không phán quyết thay bạn. Chỉ giúp nhìn rõ điều đang diễn ra.</p>
-            <button class="mini-cta" data-expert="an_nhien_tarot_clarity">Xem hồ sơ</button>
+            <p class="section-kicker">AI guide</p>
+            <h3>Explore your current cycle with Bảo Nghi</h3>
+            <p>Use transits as context for preparation, not as prophecy.</p>
+            <button class="mini-cta" data-expert="bao_nghi_transit_timing">View profile</button>
             <div class="orbit-art" aria-hidden="true"><div class="body"></div><div class="head"></div><div class="hair"></div></div>
           </article>
         </section>
 
-        <section class="view" data-view="readings">
-          <header class="topbar"><div class="brand">Readings</div><button class="icon-button" aria-label="Lịch sử"><svg><use href="#i-book"/></svg></button></header>
-          <p class="section-kicker">Chọn điều bạn muốn làm rõ</p>
-          <h2 class="display">Một câu hỏi tốt bắt đầu từ chính bạn.</h2>
-          <p class="subcopy">Mỗi trải bài được thiết kế cho một loại quyết định khác nhau.</p>
-          <div class="filter-row">
-            <button class="filter active">Tất cả</button><button class="filter">Hôm nay</button><button class="filter">Tình yêu</button><button class="filter">Sự nghiệp</button>
+        <section class="view" data-view="astrology">
+          <header class="topbar"><div class="brand">Astrology</div><button class="icon-button" aria-label="Open birth profile" data-view-target="profile"><svg><use href="#i-user"/></svg></button></header>
+          <p class="section-kicker">Your personal chart</p>
+          <h2 class="display">Understand the context without putting yourself in a box.</h2>
+          <p class="subcopy">From your natal chart to current cycles, every insight clearly reflects the available data and level of certainty.</p>
+          <div class="astrology-profile">
+            <div class="placement-chip"><span>Sun</span><strong id="astrologySun">Not available</strong></div>
+            <div class="placement-chip"><span>Moon</span><strong>Birth time needed</strong></div>
+            <div class="placement-chip"><span>Rising</span><strong>Birthplace needed</strong></div>
           </div>
           <div class="reading-list">
-            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Daily Card — một kết quả duy nhất trong ngày.">
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="horoscope">
               <div class="reading-symbol"><svg><use href="#i-sun"/></svg></div>
-              <div><h3>Thông điệp hôm nay</h3><p>Một lá bài giúp bạn đặt tâm điểm cho ngày mới.</p><span class="reading-tag">1 lá · 2 phút</span></div><span class="chevron">›</span>
+              <div><h3>Personal horoscope</h3><p>Daily, weekly, and monthly themes based on the information you provided.</p><span class="reading-tag">Updated daily</span></div><span class="chevron">›</span>
             </article>
-            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Love Reflection.">
-              <div class="reading-symbol"><svg><use href="#i-heart"/></svg></div>
-              <div><h3>Tình yêu &amp; mối quan hệ</h3><p>Khám phá nhu cầu, ranh giới và cách giao tiếp.</p><span class="reading-tag">3 lá · 5 phút</span></div><span class="chevron">›</span>
-            </article>
-            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Decision Compass.">
-              <div class="reading-symbol"><svg><use href="#i-compass"/></svg></div>
-              <div><h3>La bàn quyết định</h3><p>Nhìn rõ lựa chọn, trade-off và bước thử nghiệm tiếp theo.</p><span class="reading-tag">3 lá · 6 phút</span></div><span class="chevron">›</span>
-            </article>
-            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Open Reflection thay cho Yes/No tuyệt đối.">
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="natal">
               <div class="reading-symbol"><svg><use href="#i-spark"/></svg></div>
-              <div><h3>Một câu hỏi đang bỏ ngỏ</h3><p>Điều gì đang ủng hộ, cản trở và nằm trong quyền chủ động?</p><span class="reading-tag">1 lá · 3 phút</span></div><span class="chevron">›</span>
+              <div><h3>Natal chart</h3><p>Explore your verified Sun, Moon, Rising sign, houses, and aspects.</p><span class="reading-tag">Natal chart</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="transits">
+              <div class="reading-symbol"><svg><use href="#i-compass"/></svg></div>
+              <div><h3>Transits &amp; cycles</h3><p>Understand the themes of your current cycle and prepare intentionally.</p><span class="reading-tag">Timing with uncertainty</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="moon-calendar">
+              <div class="reading-symbol"><svg><use href="#i-sun"/></svg></div>
+              <div><h3>Moon calendar</h3><p>Follow lunar phases, reflection prompts, and energetic rhythms.</p><span class="reading-tag">Moon calendar</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="synastry">
+              <div class="reading-symbol"><svg><use href="#i-heart"/></svg></div>
+              <div><h3>Chart compatibility</h3><p>Explore connection, potential misunderstandings, and communication between two people.</p><span class="reading-tag">Synastry</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="zodiac">
+              <div class="reading-symbol"><svg><use href="#i-book"/></svg></div>
+              <div><h3>Zodiac library</h3><p>Symbols, elements, modalities, and the story of each sign.</p><span class="reading-tag">Zodiac encyclopedia</span></div><span class="chevron">›</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view="tarot">
+          <header class="topbar"><div class="brand">Tarot</div><button class="icon-button" aria-label="Tarot history" data-open="tarot-history"><svg><use href="#i-book"/></svg></button></header>
+          <p class="section-kicker">Choose what you want to explore</p>
+          <h2 class="display">A meaningful question begins with you.</h2>
+          <p class="subcopy">Each spread is designed for a different kind of decision.</p>
+          <article class="tarot-ritual">
+            <div class="ritual-aura" aria-hidden="true"></div>
+            <button class="ritual-deck" id="ritualDeck" aria-label="Tap to reveal the sample card">
+              <span class="ritual-card"></span><span class="ritual-card"></span><span class="ritual-card"></span>
+            </button>
+            <div class="ritual-copy">
+              <p><strong id="ritualTitle">Daily reflection</strong><span id="ritualHint">Tap the deck to see the reveal effect</span></p>
+              <span class="reading-tag">3D reveal demo</span>
+            </div>
+          </article>
+          <div class="filter-row">
+            <button class="filter active">All</button><button class="filter">Today</button><button class="filter">Love</button><button class="filter">Career</button>
+          </div>
+          <div class="reading-list">
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="tarot-question" data-spread="daily">
+              <div class="reading-symbol"><svg><use href="#i-sun"/></svg></div>
+              <div><h3>Today's message</h3><p>One card to help set your focus for the day.</p><span class="reading-tag">1 card · 2 min</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="tarot-question" data-spread="yesno">
+              <div class="reading-symbol"><svg><use href="#i-spark"/></svg></div>
+              <div><h3>Nuanced Yes / No</h3><p>Explore what supports you, what stands in the way, and what remains within your control.</p><span class="reading-tag">1 card · 3 min</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="tarot-question" data-spread="love">
+              <div class="reading-symbol"><svg><use href="#i-heart"/></svg></div>
+              <div><h3>Love &amp; relationships</h3><p>Explore needs, boundaries, and communication.</p><span class="reading-tag">3 cards · 5 min</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="tarot-question" data-spread="money">
+              <div class="reading-symbol"><svg><use href="#i-compass"/></svg></div>
+              <div><h3>Money &amp; resources</h3><p>Examine your flow of resources, potential risks, and one small adjustment.</p><span class="reading-tag">3 cards · 5 min</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="tarot-question" data-spread="spread3">
+              <div class="reading-symbol"><svg><use href="#i-cards"/></svg></div>
+              <div><h3>Three-Card Compass</h3><p>The situation, what is blocking you, and the next step to try.</p><span class="reading-tag">3 cards · 6 min</span></div><span class="chevron">›</span>
             </article>
           </div>
         </section>
 
         <section class="view" data-view="experts">
-          <header class="topbar"><div class="brand">Chuyên gia</div><button class="icon-button" aria-label="Thông tin về AI" data-toast="Các chuyên gia là AI companion, không phải người thật."><svg><use href="#i-spark"/></svg></button></header>
-          <p class="section-kicker">Chọn người đồng hành phù hợp</p>
-          <h2 class="display">Mỗi cuộc trò chuyện, một phạm vi rõ ràng.</h2>
-          <p class="subcopy">Bạn luôn giữ quyền quyết định. Chuyên gia giúp phản chiếu, không tiên tri tương lai.</p>
+          <header class="topbar"><div class="brand">Experts</div><button class="icon-button" aria-label="About AI" data-open="experts-info"><svg><use href="#i-spark"/></svg></button></header>
+          <p class="section-kicker">Choose the right guide</p>
+          <h2 class="display">Every conversation has a clear scope.</h2>
+          <p class="subcopy">You always remain in control. Experts support reflection; they do not predict the future.</p>
           <div class="filter-row">
-            <button class="filter active" data-expert-filter="all">Tất cả</button>
+            <button class="filter active" data-expert-filter="all">All</button>
             <button class="filter" data-expert-filter="tarot">Tarot</button>
-            <button class="filter" data-expert-filter="astrology">Chiêm tinh</button>
+            <button class="filter" data-expert-filter="astrology">Astrology</button>
             <button class="filter" data-expert-filter="journal">Journaling</button>
           </div>
-          <div class="trust-note">Các hồ sơ dưới đây là chuyên gia AI. Nội dung mang tính tự phản chiếu, không thay thế tư vấn y tế, pháp lý, tâm lý hoặc tài chính.</div>
+          <div class="trust-note">The profiles below are AI experts. Their guidance supports self-reflection and is not a substitute for medical, legal, mental health, or financial advice.</div>
           <div class="expert-list" id="expertList"></div>
         </section>
 
         <section class="view" data-view="journal">
-          <header class="topbar"><div class="brand">Journal</div><button class="icon-button" aria-label="Thêm ghi chú" data-toast="Prototype: tạo reflection mới."><svg><use href="#i-spark"/></svg></button></header>
-          <p class="section-kicker">Riêng tư · Chỉ bạn nhìn thấy</p>
-          <h2 class="display">Nhìn lại những điều đang dần trở nên rõ ràng.</h2>
+          <header class="topbar"><div class="brand">Journal</div><div style="display:flex;gap:8px"><button class="icon-button" aria-label="Search" data-open="journal-search">⌕</button><button class="icon-button" aria-label="Add entry" data-open="journal-compose"><svg><use href="#i-spark"/></svg></button></div></header>
+          <p class="section-kicker">Private · For your eyes only</p>
+          <h2 class="display">Look back on what is becoming clearer.</h2>
           <div class="journal-calendar" style="margin-top:20px">
-            <div class="calendar-head"><strong>Tháng 9, 2026</strong><span class="score">6 reflections</span></div>
+            <div class="calendar-head"><strong>September 2026</strong><span class="score">6 reflections</span></div>
             <div class="days">
-              <span class="day-name">T2</span><span class="day-name">T3</span><span class="day-name">T4</span><span class="day-name">T5</span><span class="day-name">T6</span><span class="day-name">T7</span><span class="day-name">CN</span>
-              <span class="day"></span><span class="day">1</span><span class="day">2</span><span class="day has-entry">3</span><span class="day">4</span><span class="day">5</span><span class="day has-entry">6</span>
+              <span class="day-name">Mon</span><span class="day-name">Tue</span><span class="day-name">Wed</span><span class="day-name">Thu</span><span class="day-name">Fri</span><span class="day-name">Sat</span><span class="day-name">Sun</span>
+              <span class="day"></span><span class="day">1</span><span class="day">2</span><span class="day has-entry pressable" data-open="journal-detail" data-entry="love">3</span><span class="day">4</span><span class="day">5</span><span class="day has-entry pressable" data-open="journal-detail" data-entry="career">6</span>
               <span class="day">7</span><span class="day">8</span><span class="day has-entry">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span>
               <span class="day">14</span><span class="day has-entry">15</span><span class="day">16</span><span class="day">17</span><span class="day has-entry">18</span><span class="day">19</span><span class="day">20</span>
               <span class="day">21</span><span class="day">22</span><span class="day today">23</span><span class="day">24</span><span class="day">25</span><span class="day">26</span><span class="day">27</span>
             </div>
           </div>
-          <div class="section-head"><h2>Gần đây</h2><button class="text-button">Lọc</button></div>
-          <div class="journal-entry"><div class="entry-card"></div><div><time>18 tháng 9 · Tình yêu</time><h3>Queen of Cups</h3><p>Mình nhận ra lắng nghe không có nghĩa là bỏ qua ranh giới của bản thân.</p></div></div>
-          <div class="journal-entry"><div class="entry-card"></div><div><time>15 tháng 9 · Sự nghiệp</time><h3>Two of Wands</h3><p>Thử nghiệm nhỏ tuần này: nói chuyện với một người đang làm công việc mình quan tâm.</p></div></div>
+          <div class="section-head"><h2>Recent</h2><button class="text-button" data-open="journal-search">Filter</button></div>
+          <div class="journal-entry pressable" role="button" tabindex="0" data-open="journal-detail" data-entry="love">
+            <div class="entry-card"></div><div><time>September 18 · Love</time><h3>Queen of Cups</h3><p>I realized that listening does not mean abandoning my own boundaries.</p></div>
+          </div>
+          <div class="journal-entry pressable" role="button" tabindex="0" data-open="journal-detail" data-entry="career">
+            <div class="entry-card"></div><div><time>September 15 · Career</time><h3>Two of Wands</h3><p>A small experiment this week: talk to someone doing work I am interested in.</p></div>
+          </div>
         </section>
 
         <section class="view" data-view="profile">
-          <header class="topbar"><div class="brand">Hồ sơ</div><button class="icon-button" aria-label="Cài đặt" data-toast="Prototype: mở cài đặt."><svg><use href="#i-user"/></svg></button></header>
-          <p class="section-kicker">Không gian của bạn</p>
-          <h2 class="display" id="profileIdentity">Hồ sơ của bạn</h2>
-          <p class="subcopy" id="profileBirth">Ngày sinh chưa được cung cấp</p>
+          <header class="topbar"><div class="brand">Profile</div><button class="icon-button" aria-label="Settings" data-open="settings"><svg><use href="#i-user"/></svg></button></header>
+          <p class="section-kicker">Your space</p>
+          <h2 class="display" id="profileIdentity">Your profile</h2>
+          <p class="subcopy" id="profileBirth">Date of birth not provided</p>
           <article class="scope-box" style="margin-top:22px">
-            <h3>Cá nhân hoá có kiểm soát</h3>
+            <h3>Personalization you control</h3>
             <div class="scope-list">
-              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Daily card được lưu cố định theo ngày.</span></div>
-              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Dữ liệu ngày sinh chỉ dùng để tạo chart khi bạn chủ động cung cấp.</span></div>
-              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Journal mặc định riêng tư và có thể xoá bất kỳ lúc nào.</span></div>
+              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Your Daily Card remains fixed for the day.</span></div>
+              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Birth data is used to generate your chart only when you choose to provide it.</span></div>
+              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Your Journal is private by default and can be deleted anytime.</span></div>
             </div>
           </article>
-          <div class="section-head"><h2>Nhịp hằng ngày</h2></div>
-          <article class="insight-card"><div class="zodiac-mark">21</div><div><h3>Nhắc tôi lúc 21:00</h3><p>Một lời nhắc nhẹ, không tạo áp lực giữ streak.</p></div><span class="score">Bật</span></article>
-          <button class="text-button" style="margin-top:20px" data-replay-funnel>Xem lại toàn bộ first-run funnel</button>
+          <div class="section-head"><h2>Daily rhythm</h2></div>
+          <article class="insight-card pressable" role="button" tabindex="0" data-open="notifications"><div class="zodiac-mark">21</div><div><h3>Remind me at 9:00 PM</h3><p>A gentle reminder with no streak pressure.</p></div><span class="score">On</span></article>
+          <div class="reading-list" style="margin-top:16px">
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="birth-setup"><div class="reading-symbol"><svg><use href="#i-sun"/></svg></div><div><h3>Birth data</h3><p>Date, time, and place of birth used to calculate your chart.</p></div><span class="chevron">›</span></article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-open="paywall"><div class="reading-symbol"><svg><use href="#i-spark"/></svg></div><div><h3>AstroDaily Premium</h3><p>Remove ads and save unlimited readings.</p></div><span class="chevron">›</span></article>
+            <article class="reading-card pressable" role="button" tabindex="0" data-funnel-next="uninstall-warn"><div class="reading-symbol"><svg><use href="#i-user"/></svg></div><div><h3>Uninstall</h3><p>View the notice before opening system settings.</p></div><span class="chevron">›</span></article>
+          </div>
+          <button class="text-button" style="margin-top:20px" data-replay-funnel>Replay the complete first-run funnel</button>
         </section>
 
-        <nav class="bottom-nav" aria-label="Điều hướng chính">
-          <button class="nav-item active" data-view-target="today"><svg><use href="#i-home"/></svg><span>Hôm nay</span></button>
-          <button class="nav-item" data-view-target="readings"><svg><use href="#i-cards"/></svg><span>Trải bài</span></button>
-          <button class="nav-item" data-view-target="experts"><svg><use href="#i-chat"/></svg><span>Chuyên gia</span></button>
+        <nav class="bottom-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view-target="today"><svg><use href="#i-home"/></svg><span>Today</span></button>
+          <button class="nav-item" data-view-target="astrology"><svg><use href="#i-sun"/></svg><span>Astrology</span></button>
+          <button class="nav-item" data-view-target="tarot"><svg><use href="#i-cards"/></svg><span>Tarot</span></button>
+          <button class="nav-item" data-view-target="experts"><svg><use href="#i-chat"/></svg><span>Experts</span></button>
           <button class="nav-item" data-view-target="journal"><svg><use href="#i-book"/></svg><span>Journal</span></button>
-          <button class="nav-item" data-view-target="profile"><svg><use href="#i-user"/></svg><span>Hồ sơ</span></button>
         </nav>
+        <div class="banner-collapse ad-slot" id="collapseBanner" aria-label="native_collapse_home">
+          <span class="native-ad-label">AD</span>
+          <span class="placement-name">native_collapse_home · fallback banner when native has no fill</span>
+        </div>
 
-        <section class="expert-detail" id="expertDetail" aria-label="Hồ sơ chuyên gia">
+        <section class="expert-detail" id="expertDetail" aria-label="Expert profile">
           <div class="detail-scroll">
             <div class="detail-top">
-              <button class="icon-button" id="closeDetail" aria-label="Quay lại">‹</button>
+              <button class="icon-button" id="closeDetail" aria-label="Back">‹</button>
               <span class="ai-badge">AI COMPANION</span>
-              <button class="icon-button" aria-label="Lưu chuyên gia" data-toast="Đã lưu chuyên gia."><svg><use href="#i-heart"/></svg></button>
+              <button class="icon-button" aria-label="Save expert" data-open="saved-expert"><svg><use href="#i-heart"/></svg></button>
             </div>
             <div class="detail-identity">
               <div class="avatar" id="detailAvatar"><span>AN</span></div>
               <h2 id="detailName">An Nhiên</h2>
-              <span id="detailTitle" class="section-kicker">Tarot cho sự sáng rõ</span>
-              <p id="detailDescription">Gỡ rối một tình huống và tìm bước đi tiếp theo mà không quyết định thay bạn.</p>
+              <span id="detailTitle" class="section-kicker">Tarot for Clarity</span>
+              <p id="detailDescription">Untangle a situation and identify your next step without making decisions for you.</p>
             </div>
             <article class="scope-box">
-              <h3>Cách chuyên gia có thể hỗ trợ</h3>
+              <h3>How this expert can help</h3>
               <div class="scope-list" id="detailCapabilities"></div>
             </article>
             <article class="scope-box">
-              <h3>Cam kết cuộc trò chuyện</h3>
+              <h3>Conversation commitments</h3>
               <div class="scope-list">
-                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Phân biệt dữ kiện, biểu tượng và giả thuyết diễn giải.</span></div>
-                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Không quyết định thay bạn hoặc khẳng định tương lai chắc chắn.</span></div>
-                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Mỗi lượt chỉ hỏi tối đa một câu hỏi chính.</span></div>
+                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Distinguish facts, symbols, and interpretive hypotheses.</span></div>
+                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Never make decisions for you or claim certainty about the future.</span></div>
+                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Ask no more than one main question at a time.</span></div>
               </div>
             </article>
           </div>
-          <div class="sticky-cta"><button class="primary" id="startChat">Bắt đầu cuộc trò chuyện</button></div>
+          <div class="sticky-cta"><button class="primary" id="startChat" data-open="chat-onboarding">Start conversation</button></div>
         </section>
 
-        <section class="chat-view" id="chatView" aria-label="Trò chuyện với chuyên gia">
+        <section class="chat-view" id="chatView" aria-label="Chat with an expert">
           <div class="chat-layout">
             <header class="chat-header">
-              <button class="icon-button" id="closeChat" aria-label="Quay lại">‹</button>
+              <button class="icon-button" id="closeChat" aria-label="Back">‹</button>
               <div style="display:flex;gap:10px;align-items:center">
                 <div class="avatar" id="chatAvatar"><span>AN</span></div>
-                <div class="chat-title"><strong id="chatName">An Nhiên</strong><span>Chuyên gia AI · Sẵn sàng</span></div>
+                <div class="chat-title"><strong id="chatName">An Nhiên</strong><span>AI expert · Available</span></div>
               </div>
-              <button class="icon-button" aria-label="Tuỳ chọn" data-toast="Cuộc trò chuyện được lưu trong Journal khi bạn đồng ý.">···</button>
+              <button class="icon-button" aria-label="Options" data-sheet="chat-options">···</button>
             </header>
             <div class="chat-messages" id="chatMessages">
-              <div class="message guide" id="greeting">Mình sẽ cùng bạn nhìn rõ điều đang diễn ra. Bạn muốn hiểu tình huống hiện tại hay tìm hướng hành động?</div>
-              <div class="chat-label">Bạn có thể bắt đầu với</div>
+              <div class="message guide" id="greeting">I’ll help you see what is happening more clearly. Would you like to understand the situation or explore a course of action?</div>
+              <div class="chat-label">You could start with</div>
               <div class="suggestions">
-                <button class="suggestion">Mình đang phân vân giữa hai lựa chọn</button>
-                <button class="suggestion">Mình muốn hiểu cảm xúc hiện tại</button>
+                <button class="suggestion">I'm deciding between two options</button>
+                <button class="suggestion">I want to understand what I'm feeling</button>
               </div>
             </div>
             <form class="composer" id="chatForm">
-              <input id="chatInput" aria-label="Tin nhắn" placeholder="Chia sẻ điều bạn đang nghĩ..." autocomplete="off" />
-              <button class="send" aria-label="Gửi"><svg><use href="#i-send"/></svg></button>
+              <input id="chatInput" aria-label="Message" placeholder="Share what’s on your mind..." autocomplete="off" />
+              <button class="send" aria-label="Send"><svg><use href="#i-send"/></svg></button>
             </form>
           </div>
         </section>
+        <div class="qa-ribbon" id="qaRibbon" aria-label="Prototype QA">
+          <button data-qa="first-run">First-run</button>
+          <button data-qa="returning">Returning</button>
+          <button data-qa="uninstall">Uninstall</button>
+          <button data-qa="nofill">No-fill</button>
+          <button data-qa="loading">Loading</button>
+          <button data-qa="offline">Offline</button>
+        </div>
+        <section class="stack" id="stack" aria-live="polite"></section>
+        <div class="sheet" id="sheet"></div>
+        <div class="dialog" id="dialog"></div>
         <div class="toast" id="toast" role="status"></div>
       </div>
     </section>
@@ -1774,13 +3123,14 @@
       <p class="eyebrow">Design rationale</p>
       <h2>Calm, credible, personal.</h2>
       <div class="note-list">
-        <div class="note"><strong>Today-first architecture</strong><p>Một hành động chính mỗi ngày giúp giảm decision fatigue và tạo thói quen tự nhiên.</p></div>
-        <div class="note"><strong>Expert matching</strong><p>7 chuyên gia giữ phạm vi chuyên môn riêng; profile giải thích rõ khả năng trước khi vào chat.</p></div>
-        <div class="note"><strong>Responsible AI</strong><p>Badge AI luôn hiển thị. Copy tránh tiên tri tuyệt đối và không tạo phụ thuộc cảm xúc.</p></div>
-        <div class="note"><strong>Editorial mysticism</strong><p>Serif giàu cảm xúc kết hợp sans dễ đọc; màu huyền bí tiết chế, khoảng thở lớn.</p></div>
-        <div class="note"><strong>Revenue with trust</strong><p>Không đặt quảng cáo trước reading hoặc trong chat; premium xuất hiện sau value moment.</p></div>
+        <div class="note"><strong>Today-first architecture</strong><p>One primary action each day reduces decision fatigue and supports a natural habit.</p></div>
+        <div class="note"><strong>Astrology as a core pillar</strong><p>Cosmic Brief is the hero; Astrology and Tarot are equal hubs in the navigation.</p></div>
+        <div class="note"><strong>Expert matching</strong><p>Seven experts each have a distinct scope; every profile explains capabilities before chat begins.</p></div>
+        <div class="note"><strong>Responsible AI</strong><p>The AI badge is always visible. Copy avoids absolute predictions and emotional dependency.</p></div>
+        <div class="note"><strong>Editorial mysticism</strong><p>Expressive serif meets readable sans; a restrained mystical palette leaves generous breathing room.</p></div>
+        <div class="note"><strong>Revenue with trust</strong><p>No ads appear before a reading or inside chat; Premium appears only after a moment of value.</p></div>
       </div>
-      <div class="token-row" aria-label="Bảng màu">
+      <div class="token-row" aria-label="Color palette">
         <span class="swatch" style="--swatch:#101126"></span><span class="swatch" style="--swatch:#a994ed"></span><span class="swatch" style="--swatch:#e89a8f"></span><span class="swatch" style="--swatch:#d3b778"></span><span class="swatch" style="--swatch:#f8f3eb"></span>
       </div>
     </aside>
@@ -1805,59 +3155,59 @@
     const experts = [
       {
         id: "an_nhien_tarot_clarity", group: "tarot", initials: "AN", accent: "#8D72C3",
-        name: "An Nhiên", title: "Tarot cho sự sáng rõ",
-        description: "Gỡ rối một tình huống và tìm bước đi tiếp theo mà không quyết định thay bạn.",
-        tags: ["Quyết định", "Tự phản chiếu"],
-        greeting: "Mình sẽ cùng bạn nhìn rõ điều đang diễn ra. Bạn muốn hiểu tình huống hiện tại hay tìm hướng hành động?",
-        capabilities: ["Nhận diện nút thắt cốt lõi", "Làm rõ điều nằm trong quyền kiểm soát", "Đề xuất một hành động nhỏ trong 24 giờ"]
+        name: "An Nhiên", title: "Tarot for Clarity",
+        description: "Untangle a situation and identify your next step without making decisions for you.",
+        tags: ["Decision-making", "Self-reflection"],
+        greeting: "I’ll help you see what is happening more clearly. Would you like to understand the situation or explore a course of action?",
+        capabilities: ["Identify the central issue", "Clarify what is within your control", "Suggest one small action for the next 24 hours"]
       },
       {
         id: "lam_relationship_patterns", group: "tarot", initials: "L", accent: "#C46A82",
-        name: "Lam", title: "Tarot về tình yêu và mối quan hệ",
-        description: "Khám phá nhu cầu, ranh giới và cách giao tiếp trong các mối quan hệ.",
-        tags: ["Tình yêu", "Ranh giới"],
-        greeting: "Mình có thể giúp bạn nhìn rõ mô hình đang diễn ra giữa hai người. Điều bạn muốn hiểu nhất lúc này là cảm xúc của mình, cách giao tiếp hay quyết định về mối quan hệ?",
-        capabilities: ["Phân biệt dữ kiện và giả định", "Khám phá nhu cầu và ranh giới", "Chuẩn bị một cuộc trò chuyện lành mạnh"]
+        name: "Lam", title: "Tarot for Love & Relationships",
+        description: "Explore needs, boundaries, and communication patterns in relationships.",
+        tags: ["Love", "Boundaries"],
+        greeting: "I can help you understand the pattern unfolding between two people. What matters most right now: your feelings, communication, or a relationship decision?",
+        capabilities: ["Distinguish facts from assumptions", "Explore needs and boundaries", "Prepare for a healthy conversation"]
       },
       {
         id: "gia_han_career_direction", group: "tarot", initials: "GH", accent: "#4D8A8B",
-        name: "Gia Hân", title: "Tarot về sự nghiệp và hướng đi",
-        description: "Làm rõ động lực, trở ngại và lựa chọn trong công việc hoặc hành trình phát triển nghề nghiệp.",
-        tags: ["Sự nghiệp", "Định hướng"],
-        greeting: "Mình sẽ giúp bạn nhìn rõ hướng đi nghề nghiệp, không hứa hẹn một kết quả cố định. Bạn đang cân nhắc lựa chọn nào?",
-        capabilities: ["Làm rõ giá trị nghề nghiệp", "So sánh trade-off thực tế", "Thiết kế một thử nghiệm nghề nghiệp nhỏ"]
+        name: "Gia Hân", title: "Tarot for Career & Direction",
+        description: "Clarify your motivation, obstacles, and options at work or along your career path.",
+        tags: ["Career", "Direction"],
+        greeting: "I’ll help you clarify your career direction without promising a fixed outcome. Which options are you considering?",
+        capabilities: ["Clarify your career values", "Compare practical trade-offs", "Design a small career experiment"]
       },
       {
         id: "minh_khue_natal_identity", group: "astrology", initials: "MK", accent: "#526AAE",
-        name: "Minh Khuê", title: "Chiêm tinh bản đồ sao cá nhân",
-        description: "Khám phá nhu cầu, thế mạnh và những mâu thuẫn nội tâm qua bản đồ sao.",
-        tags: ["Bản đồ sao", "Hiểu bản thân"],
-        greeting: "Mình sẽ đọc bản đồ sao như một hệ thống xu hướng, không phải chiếc hộp định nghĩa con người bạn. Bạn muốn khám phá bản sắc, cảm xúc hay cách mình kết nối với người khác?",
-        capabilities: ["Tổng hợp các placement đã xác minh", "Khám phá nhu cầu bên dưới hành vi", "Nhìn cả biểu hiện cân bằng và mất cân bằng"]
+        name: "Minh Khuê", title: "Natal Chart Astrology",
+        description: "Explore your needs, strengths, and inner tensions through your natal chart.",
+        tags: ["Natal chart", "Self-understanding"],
+        greeting: "I’ll read your natal chart as a system of tendencies, not a box that defines you. Would you like to explore identity, emotions, or how you connect with others?",
+        capabilities: ["Synthesize verified placements", "Explore the needs beneath behavior", "Examine both balanced and unbalanced expressions"]
       },
       {
         id: "bao_nghi_transit_timing", group: "astrology", initials: "BN", accent: "#6B63A8",
-        name: "Bảo Nghi", title: "Chiêm tinh chu kỳ và thời điểm",
-        description: "Hiểu chủ đề của giai đoạn hiện tại và lựa chọn cách phản ứng chủ động.",
-        tags: ["Transit", "Chu kỳ"],
-        greeting: "Mình có thể giúp bạn hiểu một giai đoạn đang nhấn mạnh điều gì, nhưng không xem transit như lời tiên tri. Bạn muốn xem chủ đề nào và trong khoảng thời gian nào?",
-        capabilities: ["Nhận diện chủ đề của chu kỳ", "Nêu rõ khoảng thời gian và độ bất định", "Chuẩn bị cho cơ hội và áp lực"]
+        name: "Bảo Nghi", title: "Astrological Cycles & Timing",
+        description: "Understand the themes of your current cycle and choose an intentional response.",
+        tags: ["Transit", "Cycles"],
+        greeting: "I can help you understand what a cycle is emphasizing without treating transits as prophecy. Which theme and time frame would you like to explore?",
+        capabilities: ["Identify the themes of a cycle", "Clarify the time frame and uncertainty", "Prepare for opportunities and pressure"]
       },
       {
         id: "thien_yen_synastry_dynamics", group: "astrology", initials: "TY", accent: "#B1627C",
-        name: "Thiên Yến", title: "Chiêm tinh tương hợp và động lực quan hệ",
-        description: "Tìm hiểu nhu cầu, điểm hòa hợp và vùng dễ xung đột giữa hai bản đồ sao.",
-        tags: ["Tương hợp", "Giao tiếp"],
-        greeting: "Mình sẽ giúp bạn hiểu động lực giữa hai người, không kết luận ai là định mệnh của ai. Bạn muốn tập trung vào giao tiếp hay nhu cầu tình cảm?",
-        capabilities: ["Phân tích nhu cầu của cả hai phía", "Nhận diện vùng dễ hiểu lầm", "Đề xuất một cách giao tiếp thực tế"]
+        name: "Thiên Yến", title: "Synastry & Relationship Dynamics",
+        description: "Understand needs, areas of harmony, and potential friction between two natal charts.",
+        tags: ["Compatibility", "Communication"],
+        greeting: "I’ll help you understand the dynamic between two people without declaring anyone destined for another. Would you like to focus on communication or emotional needs?",
+        capabilities: ["Explore both people’s needs", "Identify likely misunderstandings", "Suggest a practical way to communicate"]
       },
       {
         id: "moc_shadow_journaling", group: "journal", initials: "M", accent: "#66765B",
-        name: "Mộc", title: "Tarot cho journaling và khám phá nội tâm",
-        description: "Dùng biểu tượng Tarot để nhận diện cảm xúc và những mô hình đang lặp lại.",
-        tags: ["Journaling", "Nội tâm"],
-        greeting: "Mình sẽ đi cùng bạn từng bước, không ép bạn đào sâu hơn mức bạn thấy an toàn. Có cảm xúc hay mô hình nào bạn muốn hiểu rõ hơn không?",
-        capabilities: ["Quan sát một cảm xúc mỗi lượt", "Gợi ý tối đa ba journal prompts", "Grounding nhẹ và quyền dừng bất kỳ lúc nào"]
+        name: "Mộc", title: "Tarot for Journaling & Inner Exploration",
+        description: "Use Tarot symbolism to recognize emotions and recurring patterns.",
+        tags: ["Journaling", "Inner work"],
+        greeting: "I’ll move at your pace and never push deeper than feels safe. Is there an emotion or pattern you would like to understand better?",
+        capabilities: ["Explore one emotion at a time", "Offer up to three journal prompts", "Gentle grounding with permission to stop anytime"]
       }
     ];
 
@@ -1869,9 +3219,28 @@
     let selectedLanguage = null;
     let selectedVariant = null;
     let onboardingPage = 0;
-    let onboardingGoal = "";
     let swipeStartX = null;
+    let screenStack = [];
+    const animatedViews = new Set();
+    const entranceCleanupTimers = new Map();
+    let selectedSpread = "daily";
+    let selectedPlan = "monthly_131k";
+    let premiumUnlocked = false;
+    let adsNoFill = false;
+    let tarotQuestion = "";
+    let selectedCards = [];
+    let birthTime = "";
+    let birthPlace = "";
+    let reminderOn = true;
+    let ttsOn = false;
+    let birthTimeUnknown = false;
+    let profileGender = "";
+    let personalizationTimer;
 
+    const stackEl = document.getElementById("stack");
+    const sheetEl = document.getElementById("sheet");
+    const dialogEl = document.getElementById("dialog");
+    const collapseBanner = document.getElementById("collapseBanner");
     const preFunnel = document.getElementById("preFunnel");
     const expertList = document.getElementById("expertList");
     const detail = document.getElementById("expertDetail");
@@ -1881,6 +3250,451 @@
     const birthDay = document.getElementById("birthDay");
     const birthMonth = document.getElementById("birthMonth");
     const birthYear = document.getElementById("birthYear");
+    const birthDateSummary = document.getElementById("birthDateSummary");
+    const birthPickerModal = document.getElementById("birthPickerModal");
+    const onboardingBirthPlace = document.getElementById("onboardingBirthPlace");
+    const onboardingBirthTime = document.getElementById("onboardingBirthTime");
+    const profileSyncConsent = document.getElementById("profileSyncConsent");
+    const createCelestialProfile = document.getElementById("createCelestialProfile");
+
+    const zodiacLibrary = [
+      ["Aries", "♈", "Fire", "Initiative, drive, courage"],
+      ["Taurus", "♉", "Earth", "Stability, sensuality, persistence"],
+      ["Gemini", "♊", "Air", "Curiosity, communication, adaptability"],
+      ["Cancer", "♋", "Water", "Nurturing, memory, home"],
+      ["Leo", "♌", "Fire", "Creativity, confidence, self-expression"],
+      ["Virgo", "♍", "Earth", "Discernment, service, analysis"],
+      ["Libra", "♎", "Air", "Balance, aesthetics, dialogue"],
+      ["Scorpio", "♏", "Water", "Depth, transformation, boundaries"],
+      ["Sagittarius", "♐", "Fire", "Meaning, exploration, belief"],
+      ["Capricorn", "♑", "Earth", "Discipline, responsibility, structure"],
+      ["Aquarius", "♒", "Air", "Vision, community, individuality"],
+      ["Pisces", "♓", "Water", "Intuition, empathy, imagination"]
+    ];
+    const planetRows = [
+      ["Sun", "Identity & life direction", "planet-detail"],
+      ["Moon", "Emotional needs", "planet-detail"],
+      ["Mercury", "Thinking & communication", "planet-detail"],
+      ["Venus", "Values & connection", "planet-detail"]
+    ];
+    const houseRows = [
+      ["1st House", "How you meet the world", "house-detail"],
+      ["4th House", "Home & roots", "house-detail"],
+      ["7th House", "One-to-one relationships", "house-detail"],
+      ["10th House", "Public contribution", "house-detail"]
+    ];
+    const cards = [
+      { name: "The Star", meaning: "Hope, direction, and faith are being renewed." },
+      { name: "Queen of Cups", meaning: "Honor your feelings without losing your boundaries." },
+      { name: "Two of Wands", meaning: "A small experiment can help validate your direction." },
+      { name: "Seven of Swords", meaning: "Something remains unsaid; ask for clarity before drawing conclusions." },
+      { name: "Ace of Pentacles", meaning: "A new resource becomes sustainable only when nurtured step by step." }
+    ];
+    const tarotPromptOptions = {
+      daily: [
+        "What should I focus on today?",
+        "What energy is influencing me right now?",
+        "What should I keep in mind today?"
+      ],
+      yesno: [
+        "What supports this choice?",
+        "What am I not seeing before I decide?",
+        "What small step could help me test the answer?"
+      ],
+      love: [
+        "What do I need to understand about this relationship?",
+        "Which of my needs have gone unspoken?",
+        "How can I communicate more clearly?"
+      ],
+      money: [
+        "What should I change about how I use my resources?",
+        "Which risk deserves closer attention?",
+        "What is my next small, practical financial step?"
+      ],
+      spread3: [
+        "What is really happening in this situation?",
+        "What is the main obstacle, and what can I influence?",
+        "What is the right next step for me to try?"
+      ]
+    };
+
+    function head(title, kicker = "") {
+      return `<div class="stack-head">
+        <button class="icon-button" data-back aria-label="Back">←</button>
+        <h2>${title}${kicker ? `<small>${kicker}</small>` : ""}</h2>
+      </div>`;
+    }
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+    function primary(label, attrs = "") {
+      return `<button class="primary pressable" ${attrs}>${label}</button>`;
+    }
+    function adSlot(name, extra = "") {
+      if (adsNoFill) return `<div class="ad-slot fail" data-ad-fail>No fill · ${name} collapsed</div>`;
+      return `<div class="ad-slot ${extra}"><span class="native-ad-label">AD</span><span class="placement-name">${name}</span></div>`;
+    }
+    function setting(label, note, on, id) {
+      return `<div class="setting-row"><div><span>${label}</span><small>${note}</small></div><button class="switch ${on ? "on" : ""}" data-toggle="${id}" aria-pressed="${on}"></button></div>`;
+    }
+
+    const screens = {
+      "cosmic-brief": () => `${head("Cosmic Brief", "Today")}
+        <p>The Moon highlights emotional balance, while Mercury encourages you to ask for clarity instead of making assumptions.</p>
+        <div class="orbit" aria-hidden="true"><span></span></div>
+        <article class="insight-card"><div class="zodiac-mark">☿</div><div><h3>Avoid premature conclusions</h3><p>A thoughtful question is better than a confident assumption.</p></div></article>
+        ${adSlot("native_home")}
+        ${primary("Write a reflection", 'data-open="reflection"')}
+        <button class="text-button" data-open="horoscope">View today's horoscope</button>`,
+      "moon-detail": () => `${head("Waning Moon", "72% illuminated")}
+        <div class="moon-illum" aria-hidden="true"></div>
+        <p>Conserve your energy and complete what remains unfinished. This is a time for closing a loop, not starting something new.</p>
+        ${primary("View Moon calendar", 'data-open="moon-calendar"')}
+        <button class="text-button" data-open="moon-day">Today's details</button>`,
+      "transit-today": () => `${head("Mercury △ Jupiter", "Featured transit")}
+        <div class="orbit"><span></span></div>
+        <p>Supportive for learning and big-picture conversations. This is a tendency, not a guarantee of results.</p>
+        ${primary("View transit timeline", 'data-open="transits"')}
+        <button class="text-button" data-open="transit-detail">Aspect details</button>`,
+      "daily-tarot": () => `${head("Today's card", "One result per day")}
+        <div class="card-3d">The Star</div>
+        <p>${cards[0].meaning}</p>
+        ${adSlot("native_before_result")}
+        <div class="chip-row">
+          <button class="chip" data-sheet="tts">Listen</button>
+          <button class="chip" data-sheet="share">Share</button>
+          <button class="chip" data-open="reflection">Save to Journal</button>
+        </div>
+        ${primary("Draw another spread", 'data-open="tarot-question" data-spread="daily"')}`,
+      reflection: () => `${head("Reflection", "Journal")}
+        <div class="form-field"><span>What deserves attention</span><textarea id="reflectText">What deserves a more honest look?</textarea></div>
+        ${primary("Save to Journal", 'data-save-journal')}
+        <button class="text-button" data-open="journal-detail" data-entry="love">View saved entry</button>`,
+      horoscope: () => `${head("Horoscope", "Day · Week · Month")}
+        <div class="chip-row" role="tablist">
+          <button class="chip on" data-tab="day">Day</button>
+          <button class="chip" data-tab="week">Week</button>
+          <button class="chip" data-tab="month">Month</button>
+        </div>
+        <article class="insight-card" id="horoscopeBody"><div class="zodiac-mark">☉</div><div><h3>Today</h3><p>Pause before drawing conclusions. Ask one more question before deciding.</p></div></article>
+        ${adSlot("native_home")}
+        ${primary("Open natal chart", 'data-open="natal"')}`,
+      natal: () => `${head("Natal chart", "Overview")}
+        <svg class="chart-wheel" viewBox="0 0 220 220" aria-hidden="true" style="width:160px;height:160px;margin:8px auto"><circle cx="110" cy="110" r="92"/><circle cx="110" cy="110" r="66"/><circle class="planet" cx="146" cy="61" r="6"/></svg>
+        <p>Your Sun sign is determined from your birth date. Your Moon and Rising signs require a birth time and location.</p>
+        <div class="reading-list">
+          ${planetRows.map(([n, d]) => `<article class="reading-card pressable" data-open="planet-detail"><div><h3>${n}</h3><p>${d}</p></div><span class="chevron">›</span></article>`).join("")}
+          ${houseRows.map(([n, d]) => `<article class="reading-card pressable" data-open="house-detail"><div><h3>${n}</h3><p>${d}</p></div><span class="chevron">›</span></article>`).join("")}
+          <article class="reading-card pressable" data-open="aspect-detail"><div><h3>Sun △ Moon</h3><p>Your inner experience and outward actions are aligned.</p></div><span class="chevron">›</span></article>
+        </div>
+        ${primary("Add birth time", 'data-open="birth-setup"')}
+        <button class="text-button" data-open="missing-birth">Missing information?</button>`,
+      "planet-detail": () => `${head("Sun placement", "Planet")}
+        <p>The Sun describes the life direction you seek to express. It indicates a tendency, not a fixed personality verdict.</p>
+        ${primary("View the Sun's house", 'data-open="house-detail"')}`,
+      "house-detail": () => `${head("1st House", "House")}
+        <p>The 1st House describes how you meet the world. An exact birth time is needed to calculate the cusp accurately.</p>
+        ${primary("Add birthplace", 'data-open="birth-setup"')}`,
+      "aspect-detail": () => `${head("Sun △ Moon", "Aspect")}
+        <p>A trine suggests natural resonance, not effortless success. Treat it as a resource you can draw on.</p>
+        ${primary("Back to natal chart", 'data-open="natal"')}`,
+      transits: () => `${head("Transits", "Timeline")}
+        <div class="timeline">
+          <article class="timeline-item pressable" data-open="transit-detail"><strong>Today</strong><div><h3>Mercury △ Jupiter</h3><p>Learning, dialogue, and perspective.</p></div></article>
+          <article class="timeline-item pressable" data-open="transit-detail"><strong>This week</strong><div><h3>Venus enters the 7th House</h3><p>Relationship themes are emphasized, though timing remains uncertain without a birth time.</p></div></article>
+          <article class="timeline-item pressable" data-open="transit-detail"><strong>This month</strong><div><h3>Saturn square natal Sun</h3><p>Discipline and responsibility; preparation rather than prediction.</p></div></article>
+        </div>
+        ${primary("Chat with Bảo Nghi", 'data-expert="bao_nghi_transit_timing"')}`,
+      "transit-detail": () => `${head("Mercury △ Jupiter", "Details")}
+        <div class="orbit"><span></span></div>
+        <p>The window lasts about 3–5 days. Use it to schedule study or an important conversation, not to bet on an outcome.</p>
+        ${primary("Save to Journal", 'data-open="reflection"')}`,
+      "moon-calendar": () => `${head("Moon calendar", "September")}
+        <div class="journal-calendar"><div class="days">${Array.from({length:30},(_,i)=>`<span class="day ${i===22?"today":""} ${[2,8,14,21].includes(i)?"has-entry":""}" data-open="moon-day">${i+1}</span>`).join("")}</div></div>
+        ${primary("View today", 'data-open="moon-day"')}`,
+      "moon-day": () => `${head("September 23", "Waning Moon")}
+        <div class="moon-illum"></div>
+        <p>Prompt: What can you finish without starting something new?</p>
+        ${primary("Write a reflection", 'data-open="reflection"')}`,
+      synastry: () => `${head("Synastry", "Two charts")}
+        <div class="form-field"><span>Other person's name</span><input value="An" /></div>
+        <div class="form-field"><span>Date of birth</span><input type="date" value="1994-04-12" /></div>
+        ${primary("View results", 'data-open="synastry-result"')}
+        <button class="text-button" data-open="permission">Calendar permission needed?</button>`,
+      "synastry-result": () => `${head("You × An", "Synastry")}
+        <p>Communication is a point of harmony; differing emotional rhythms may cause misunderstandings. This does not determine whether anyone is destined for another.</p>
+        ${primary("Chat with Thiên Yến", 'data-expert="thien_yen_synastry_dynamics"')}`,
+      zodiac: () => `${head("Zodiac library", "Encyclopedia")}
+        <div class="reading-list">${zodiacLibrary.map(([n,s,e,d]) => `<article class="reading-card pressable" data-open="sign-detail" data-sign="${n}"><div class="reading-symbol">${s}</div><div><h3>${n}</h3><p>${e} · ${d}</p></div><span class="chevron">›</span></article>`).join("")}</div>`,
+      "sign-detail": payload => {
+        const row = zodiacLibrary.find(item => item[0] === payload) || zodiacLibrary[0];
+        return `${head(row[0], row[2])}
+          <div class="metric" style="font-size:42px">${row[1]}</div>
+          <p>${row[3]}. This is symbolic language, not a personality box.</p>
+          ${primary("Horoscope for this sign", 'data-open="horoscope"')}`;
+      },
+      "tarot-question": () => `${head("Ask your question", selectedSpread)}
+        <div class="form-field"><span>Your question (optional)</span><textarea id="tarotQ" placeholder="What do I need to see clearly today?">${escapeHtml(tarotQuestion)}</textarea></div>
+        <p>The more specific your question, the more useful the reading. If you are unsure what to ask, choose a prompt below.</p>
+        <div class="prompt-options" aria-label="Suggested questions">
+          ${(tarotPromptOptions[selectedSpread] || tarotPromptOptions.daily).map((prompt, index) => `
+            <button class="prompt-option pressable ${tarotQuestion === prompt ? "selected" : ""}" data-tarot-prompt="${index}" aria-pressed="${tarotQuestion === prompt}">
+              <span>${prompt}</span>
+            </button>`).join("")}
+        </div>
+        ${adSlot("native_before_result", "shimmer")}
+        ${primary("Shuffle the deck", 'data-open="tarot-shuffle"')}`,
+      "tarot-shuffle": () => `${head("Shuffle the deck", "Tap to stop")}
+        <div class="shuffle-stage">
+          <button class="ritual-deck shuffling pressable" data-open="tarot-select" aria-label="Stop shuffling and choose a card">
+            <span class="ritual-card"></span><span class="ritual-card"></span><span class="ritual-card"></span>
+          </button>
+          <div class="shuffle-copy">
+            <strong>Hold your question in mind</strong>
+            <span>${escapeHtml(tarotQuestion) || "You are drawing freely—no question is required."}</span>
+          </div>
+        </div>
+        <p>Tap the deck or the button below to stop. No card is more “correct” than another.</p>
+        ${primary("Choose cards", 'data-open="tarot-select"')}`,
+      "tarot-select": () => `${head("Choose cards", selectedSpread)}
+        <div class="chip-row">${cards.map((c,i)=>`<button class="chip ${selectedCards.includes(i)?"on":""}" data-pick-card="${i}">${c.name}</button>`).join("")}</div>
+        <p>Tap to choose. Daily and Yes/No use one card; Love, Money, and the Three-Card Compass use three.</p>
+        ${primary("Reveal cards", 'data-open="before-result-ad"')}`,
+      "before-result-ad": () => `${head("Before your results", "native_before_result")}
+        ${adSlot("native_before_result")}
+        <p>If there is no fill, the prototype proceeds to the results.</p>
+        ${primary("View results", 'data-open="tarot-result"')}
+        <button class="text-button" data-qa="nofill">Simulate no fill</button>`,
+      "tarot-result": () => {
+        const count = ["love","money","spread3"].includes(selectedSpread) ? 3 : 1;
+        const picked = (selectedCards.length ? selectedCards : [0,1,2]).slice(0, count).map(i => cards[i % cards.length]);
+        const verdict = selectedSpread === "yesno" ? "<p><strong>The answer remains uncertain.</strong> There is supportive energy, but the decision remains yours.</p>" : "";
+        return `${head("Results", selectedSpread)}
+          ${picked.map(c=>`<div class="card-3d">${c.name}</div><p>${c.meaning}</p>`).join("")}
+          ${verdict}
+          <div class="chip-row">
+            <button class="chip" data-sheet="tts">TTS</button>
+            <button class="chip" data-sheet="share">Share</button>
+            <button class="chip" data-open="reflection">Save</button>
+          </div>
+          ${primary("Back to Tarot", 'data-view-target="tarot" data-back-all')}`;
+      },
+      "tarot-history": () => `${head("Tarot history", "Saved")}
+        <div class="journal-entry pressable" data-open="daily-tarot"><div class="entry-card"></div><div><time>Today</time><h3>The Star</h3><p>Your Daily Card remains fixed for the day.</p></div></div>
+        <div class="journal-entry pressable" data-open="tarot-result"><div class="entry-card"></div><div><time>September 18</time><h3>Queen of Cups</h3><p>Love spread · Linked to Journal.</p></div></div>
+        <button class="text-button" data-open="empty-journal">View empty state</button>`,
+      "experts-info": () => `${head("AI Experts", "Not human")}
+        <p>Each profile is an AI guide with a clear scope. It is not a substitute for medical, legal, mental health, or financial advice.</p>
+        ${primary("View expert catalog", 'data-view-target="experts" data-back-all')}`,
+      "chat-onboarding": () => `${head("Before you chat", selectedExpert.name)}
+        <p>This conversation is within the scope of ${selectedExpert.title}. You can stop anytime.</p>
+        <div class="scope-list">${selectedExpert.capabilities.map(item=>`<div class="scope-row"><svg><use href="#i-check"/></svg><span>${item}</span></div>`).join("")}</div>
+        ${primary("Share context", 'data-open="chat-context"')}`,
+      "chat-context": () => `${head("Helpful context", "1–2 sentences")}
+        <div class="form-field"><span>What would you like to gain from this conversation?</span>
+          <div class="chip-row">
+            <button class="chip on">Understand my feelings</button>
+            <button class="chip">Weigh my options</button>
+            <button class="chip">One actionable step</button>
+          </div>
+        </div>
+        ${primary("Start chat", "data-start-chat")}`,
+      "chat-summary": () => `${head("Summary", selectedExpert.name)}
+        <p>You are clarifying your feelings before deciding. Suggested next step: ask one more question instead of making an assumption.</p>
+        ${primary("Save to Journal", 'data-open="reflection"')}
+        <button class="text-button" data-open="chat-history">View history</button>`,
+      "chat-history": () => `${head("Chat history", "Saved")}
+        <div class="journal-entry pressable" data-open="chat-summary"><div class="entry-card"></div><div><time>Today · ${selectedExpert.name}</time><h3>Current cycle</h3><p>Saved with your consent.</p></div></div>
+        ${primary("Saved conversation", 'data-open="chat-saved"')}`,
+      "chat-saved": () => `${head("Saved", selectedExpert.name)}
+        <p>A private record in your Journal. You can delete it anytime in Privacy.</p>
+        ${primary("Open Journal", 'data-view-target="journal" data-back-all')}`,
+      "saved-expert": () => `${head("Expert saved", selectedExpert.name)}
+        <p>${selectedExpert.name} is pinned in your expert catalog. This is not a social follow or commitment.</p>
+        ${primary("Back to profile", "data-back")}`,
+      "journal-compose": () => `${head("New entry", "Private")}
+        <div class="form-field"><span>Title</span><input id="journalTitle" value="Today's reflection" /></div>
+        <div class="form-field"><span>Entry</span><textarea id="journalBody">What I want to remember...</textarea></div>
+        ${primary("Save", 'data-save-journal')}
+        <button class="text-button" data-open="empty-journal">View empty state</button>`,
+      "journal-detail": payload => {
+        const map = {
+          love: ["Queen of Cups", "I realized that listening does not mean abandoning my own boundaries."],
+          career: ["Two of Wands", "A small experiment this week: talk to someone doing work I am interested in."]
+        };
+        const row = map[payload] || map.love;
+        return `${head(row[0], "Journal")}
+          <p>${row[1]}</p>
+          <button class="text-button" data-open="daily-tarot">Open linked reading</button>
+          ${primary("Edit", 'data-open="journal-compose"')}`;
+      },
+      "journal-search": () => `${head("Search & filter", "Journal")}
+        <div class="form-field"><span>Keyword</span><input placeholder="Emotion, card, expert..." /></div>
+        <div class="chip-row"><button class="chip on">All</button><button class="chip">Tarot</button><button class="chip">Astrology</button><button class="chip">Chat</button></div>
+        <div class="journal-entry pressable" data-open="journal-detail" data-entry="love"><div class="entry-card"></div><div><time>September 18</time><h3>Queen of Cups</h3><p>Matches the Love filter.</p></div></div>`,
+      "empty-journal": () => `${head("Empty Journal", "Empty")}
+        <div class="status-card"><h3>No reflections yet</h3><p>You can write a few lines after your Cosmic Brief or a Tarot reading.</p>${primary("Create an entry", 'data-open="journal-compose"')}</div>`,
+      "birth-setup": () => `${head("Birth data", "Profile")}
+        <div class="form-field"><span>Birth time</span><input id="birthTimeInput" type="time" value="${birthTime}" /></div>
+        <div class="form-field"><span>Birthplace</span><input id="birthPlaceInput" placeholder="City" value="${birthPlace}" /></div>
+        <p>Birth time and location are used only to calculate your Moon and Rising signs. You can delete them in Privacy.</p>
+        ${primary("Save", "data-save-birth")}
+        <button class="text-button" data-open="missing-birth">Continue without birth time</button>`,
+      settings: () => `${head("Settings", "Account")}
+        ${["notifications|Reminders|Gentle reminders, no streaks","language-settings|Language|Preserves the funnel TwoScreens contract","appearance|Appearance|A/B debug option—not included in the release IA","privacy|Privacy|Delete birth data and Journal entries","rate|Rate & share|Never forced after a reading","policy|Policies|Representative webview","paywall|Premium|weekly_29k · monthly_131k · lifetime_299k"].map(row=>{const [id,t,d]=row.split("|");return `<article class="reading-card pressable" data-open="${id}"><div><h3>${t}</h3><p>${d}</p></div><span class="chevron">›</span></article>`;}).join("")}
+        <p class="debug-note">Dev Mode, style/layout A/B, and campaign overrides are for prototype QA only.</p>
+        <button class="text-button" data-open="appearance">Open debug ribbon</button>`,
+      notifications: () => `${head("Notifications", "Options")}
+        ${setting("Cosmic Brief reminder", "9:00 PM · Turn off anytime", reminderOn, "reminder")}
+        ${setting("Daily Tarot reminder", "No streaks or penalties", false, "tarot-nudge")}
+        ${primary("Open system permissions", 'data-open="permission"')}`,
+      "language-settings": () => `${head("Language", "In-app")}
+        <p>Changing the language does not replay onboarding. Funnel Language L1/L2 runs only on first open.</p>
+        <div class="chip-row"><button class="chip on">English</button><button class="chip">Vietnamese</button></div>
+        ${primary("Done", "data-back")}`,
+      appearance: () => `${head("Appearance", "Debug only")}
+        <p class="debug-note">Style/layout A/B and campaign overrides do not appear in the product IA.</p>
+        <div class="chip-row"><button class="chip on" data-ab="A">Layout A</button><button class="chip" data-ab="B">Layout B</button></div>
+        ${setting("Debug ribbon", "Always enabled in the prototype", true, "qa")}
+        ${primary("Close", "data-back")}`,
+      privacy: () => `${head("Privacy", "On-device data")}
+        <p>Journal entries, birth data, and chat history are stored on the device in this prototype.</p>
+        <button class="text-button" data-open="error">Delete Journal (demo)</button>
+        ${primary("Delete birth data", "data-clear-birth")}`,
+      rate: () => `${head("Rate the app", "After a moment of value")}
+        <p>If you found your Cosmic Brief helpful, you may leave a rating. No fear-based paywalls or fake countdowns.</p>
+        ${primary("Open store (demo)", 'data-open="policy"')}
+        <button class="text-button" data-sheet="share">Share app</button>`,
+      policy: () => `${head("Policies", "Webview")}
+        <article class="scope-box"><h3>Privacy Policy</h3><p>Representative webview content. No sensitive data is collected beyond what you choose to enter.</p></article>
+        ${primary("Close", "data-back")}`,
+      paywall: () => `${head("Premium", "Ad-free")}
+        <p>Remove ads, save unlimited readings, and receive priority TTS. Core content remains available.</p>
+        ${[["weekly_29k","Week","₫29,000"],["monthly_131k","Month","₫131,000"],["lifetime_299k","Lifetime","₫299,000"]].map(([id,n,p])=>`<button class="price-card ${selectedPlan===id?"on":""}" data-plan="${id}"><strong>${n}</strong><em>${p}</em></button>`).join("")}
+        ${primary("Continue", "data-purchase")}
+        <button class="text-button" data-open="restore">Restore purchases</button>`,
+      restore: () => `${head("Restore purchases", "IAP")}
+        <p>${premiumUnlocked ? "Premium has been restored on this device." : "No purchases were found. You can continue using the ad-supported version."}</p>
+        ${primary("Back to Settings", 'data-open="settings"')}`,
+      "missing-birth": () => `${head("Missing birth time", "Rationale")}
+        <p>Your Moon and Rising signs will remain uncertain. The daily horoscope still uses your Sun sign from your birth date.</p>
+        ${primary("Add birth time", 'data-open="birth-setup"')}
+        <button class="text-button" data-back>Use approximate results</button>`,
+      permission: () => `${head("Notification permission", "Rationale")}
+        <p>AstroDaily uses notifications for one gentle daily reminder. Declining does not restrict any features.</p>
+        ${primary("Allow", "data-back")}
+        <button class="text-button" data-back>Maybe later</button>`,
+      offline: () => `${head("Offline", "Retry")}
+        <div class="status-card"><h3>No internet connection</h3><p>The sample Cosmic Brief remains available. Chat and in-app purchases require a connection.</p>${primary("Try again", "data-back")}</div>`,
+      error: () => `${head("Unable to load", "Retry")}
+        <div class="status-card"><h3>Something went wrong</h3><p>You can return to the hub and try again.</p>${primary("Try again", "data-back")}</div>`,
+      loading: () => `${head("Loading", "Skeleton")}
+        <div class="skeleton"></div><div class="skeleton" style="width:70%;margin-top:10px"></div>
+        <div class="ad-slot shimmer"></div>
+        <p>Global loading/ad shimmer. If it times out, the prototype proceeds.</p>
+        ${primary("Skip", "data-back")}`,
+      "function-inter": () => `${head("inter_function", "Before feature")}
+        <div class="inter-creative" style="min-height:220px;border-radius:16px"><div><strong>Function interstitial</strong><span>Closing or a no-fill continues the action.</span></div></div>
+        ${primary("Continue", "data-back")}`,
+      "back-inter": () => `${head("inter_back", "On back")}
+        <div class="inter-creative" style="min-height:220px;border-radius:16px"><div><strong>Back interstitial</strong><span>This does not block exit. Close it to return to the previous screen.</span></div></div>
+        ${primary("Close", "data-back")}`,
+      "system-uninstall": () => `${head("System settings", "Demo")}
+        <div class="status-card"><h3>AstroDaily</h3><p>System App Details screen. The Uninstall button belongs to the OS, not the product UI.</p>${primary("Back to app", 'data-funnel-next="today"')}</div>`
+    };
+
+    const sheets = {
+      share: () => `<div class="sheet-handle"></div><h3>Share</h3><p>Share a result image or app link without absolute predictions.</p>${primary("Copy link", "data-close-sheet")}`,
+      tts: () => `<div class="sheet-handle"></div><h3>Listen to interpretation</h3><p>TTS reads the interpretation aloud. Turn it off anytime.</p>${primary(ttsOn ? "Stop" : "Listen", "data-toggle-tts")}`,
+      "chat-options": () => `<div class="sheet-handle"></div><h3>Chat options</h3>
+        <button class="text-button" data-open="chat-summary" data-close-sheet>Conversation summary</button>
+        <button class="text-button" data-open="chat-history" data-close-sheet>History</button>
+        <button class="text-button" data-dialog="rate-limit">Simulate rate limit</button>
+        <button class="text-button" data-dialog="out-of-scope">Outside scope</button>`
+    };
+
+    const dialogs = {
+      consent: () => `<div class="dialog-card"><h3>Advertising &amp; measurement</h3><p>AstroDaily uses advertising SDKs after the consent screen. You can still enter the app if you decline; ad slots fail open.</p>${primary("Agree", "data-consent-yes")}<button class="text-button" data-consent-no>Decline</button></div>`,
+      "ads-fail": () => `<div class="dialog-card"><h3>Ad no-fill</h3><p>The placement collapses and the flow continues. The CTA remains available.</p>${primary("Continue", "data-close-dialog")}</div>`,
+      "rate-limit": () => `<div class="dialog-card"><h3>Take a short break</h3><p>Too many messages in a short period. Try again in a few minutes.</p>${primary("Close", "data-close-dialog")}</div>`,
+      "out-of-scope": () => `<div class="dialog-card"><h3>Outside scope</h3><p>This topic requires another expert or qualified external support.</p>${primary("Choose another expert", 'data-view-target="experts" data-close-dialog')}<button class="text-button" data-close-dialog>Stay</button></div>`
+    };
+
+    function renderStack() {
+      if (!screenStack.length) {
+        stackEl.classList.remove("open");
+        stackEl.innerHTML = "";
+        return;
+      }
+      const current = screenStack[screenStack.length - 1];
+      const factory = screens[current.id];
+      stackEl.classList.add("open");
+      stackEl.innerHTML = factory
+        ? `<section class="stack-screen active">${factory(current.payload)}</section>`
+        : `<section class="stack-screen active">${head(current.id)}<p>This screen is not registered.</p></section>`;
+      stackEl.querySelector(".stack-screen")?.scrollTo(0, 0);
+    }
+
+    function openScreen(id, payload) {
+      if (id === "tarot-question" && payload) {
+        if (selectedSpread !== payload) {
+          tarotQuestion = "";
+          selectedCards = [];
+        }
+        selectedSpread = payload;
+      }
+      preFunnel.classList.add("hidden");
+      onboarding.classList.add("hidden");
+      screenStack.push({ id, payload });
+      renderStack();
+    }
+
+    function closeScreen() {
+      screenStack.pop();
+      renderStack();
+    }
+
+    function closeAllScreens() {
+      screenStack = [];
+      renderStack();
+    }
+
+    function openSheet(id) {
+      sheetEl.innerHTML = (sheets[id] || sheets.share)();
+      sheetEl.classList.add("open");
+    }
+
+    function closeSheet() {
+      sheetEl.classList.remove("open");
+      sheetEl.innerHTML = "";
+    }
+
+    function openDialog(id) {
+      dialogEl.innerHTML = (dialogs[id] || dialogs.consent)();
+      dialogEl.classList.add("open");
+    }
+
+    function closeDialog() {
+      dialogEl.classList.remove("open");
+      dialogEl.innerHTML = "";
+    }
+
+    function enterToday() {
+      clearTimeout(splashTimer);
+      preFunnel.classList.add("hidden");
+      onboarding.classList.add("hidden");
+      closeAllScreens();
+      closeSheet();
+      closeDialog();
+      showView("today");
+      collapseBanner.classList.toggle("show", !premiumUnlocked && !adsNoFill);
+      if (adsNoFill) collapseBanner.classList.remove("show");
+    }
 
     function showFunnelStage(stage) {
       document.querySelectorAll(".funnel-stage").forEach(item => {
@@ -1891,16 +3705,37 @@
     function startFirstRunFunnel() {
       clearTimeout(splashTimer);
       clearTimeout(adsReadyTimer);
+      resetTabEntrances();
       selectedLanguage = null;
       selectedVariant = null;
       resetOnboardingState();
+      closeAllScreens();
+      closeSheet();
       preFunnel.classList.remove("hidden");
       onboarding.classList.add("hidden");
+      collapseBanner.classList.remove("show");
       renderLanguageRows();
       showFunnelStage("splash");
       document.querySelector(".splash-ad").classList.add("waiting");
       adsReadyTimer = setTimeout(() => document.querySelector(".splash-ad").classList.remove("waiting"), 650);
+      openDialog("consent");
+    }
+
+    function afterConsent() {
+      closeDialog();
       splashTimer = setTimeout(() => showFunnelStage("splash-inter"), 1800);
+    }
+
+    function startReturningFunnel() {
+      clearTimeout(splashTimer);
+      resetTabEntrances();
+      closeAllScreens();
+      preFunnel.classList.remove("hidden");
+      onboarding.classList.add("hidden");
+      collapseBanner.classList.remove("show");
+      showFunnelStage("splash");
+      document.querySelector(".splash-ad").classList.toggle("waiting", !adsNoFill);
+      splashTimer = setTimeout(() => showFunnelStage("welcome-back"), 1200);
     }
 
     function enterLanguage() {
@@ -1918,7 +3753,7 @@
       return `
         <button class="language-row ${selected ? "selected" : ""}" data-language-code="${item.code}" aria-pressed="${selected}">
           <span class="flag">${item.short}</span>
-          <span class="language-name"><strong>${item.name}</strong><span>${opensL2 ? `${item.variants.length} regional variants` : "Chọn ngôn ngữ này"}</span></span>
+          <span class="language-name"><strong>${item.name}</strong><span>${opensL2 ? `${item.variants.length} regional variants` : "Choose this language"}</span></span>
           <span class="row-end">${selected ? "✓" : opensL2 ? "›" : ""}</span>
           ${showHint ? '<span class="tap-hint" aria-hidden="true"></span>' : ""}
         </button>`;
@@ -1981,19 +3816,19 @@
     }
 
     const zodiacSigns = [
-      { name: "Ma Kết", symbol: "♑", from: 1222, to: 1231 },
-      { name: "Ma Kết", symbol: "♑", from: 101, to: 119 },
-      { name: "Bảo Bình", symbol: "♒", from: 120, to: 218 },
-      { name: "Song Ngư", symbol: "♓", from: 219, to: 320 },
-      { name: "Bạch Dương", symbol: "♈", from: 321, to: 419 },
-      { name: "Kim Ngưu", symbol: "♉", from: 420, to: 520 },
-      { name: "Song Tử", symbol: "♊", from: 521, to: 620 },
-      { name: "Cự Giải", symbol: "♋", from: 621, to: 722 },
-      { name: "Sư Tử", symbol: "♌", from: 723, to: 822 },
-      { name: "Xử Nữ", symbol: "♍", from: 823, to: 922 },
-      { name: "Thiên Bình", symbol: "♎", from: 923, to: 1022 },
-      { name: "Bọ Cạp", symbol: "♏", from: 1023, to: 1121 },
-      { name: "Nhân Mã", symbol: "♐", from: 1122, to: 1221 }
+      { name: "Capricorn", symbol: "♑", from: 1222, to: 1231 },
+      { name: "Capricorn", symbol: "♑", from: 101, to: 119 },
+      { name: "Aquarius", symbol: "♒", from: 120, to: 218 },
+      { name: "Pisces", symbol: "♓", from: 219, to: 320 },
+      { name: "Aries", symbol: "♈", from: 321, to: 419 },
+      { name: "Taurus", symbol: "♉", from: 420, to: 520 },
+      { name: "Gemini", symbol: "♊", from: 521, to: 620 },
+      { name: "Cancer", symbol: "♋", from: 621, to: 722 },
+      { name: "Leo", symbol: "♌", from: 723, to: 822 },
+      { name: "Virgo", symbol: "♍", from: 823, to: 922 },
+      { name: "Libra", symbol: "♎", from: 923, to: 1022 },
+      { name: "Scorpio", symbol: "♏", from: 1023, to: 1121 },
+      { name: "Sagittarius", symbol: "♐", from: 1122, to: 1221 }
     ];
 
     function appendOptions(select, values, format = value => value) {
@@ -2010,7 +3845,7 @@
       const month = Number(birthMonth.value);
       const year = Number(birthYear.value) || 2000;
       const maxDay = month ? new Date(year, month, 0).getDate() : 31;
-      birthDay.innerHTML = '<option value="">Chọn</option>';
+      birthDay.innerHTML = '<option value="">Select</option>';
       appendOptions(birthDay, Array.from({ length: maxDay }, (_, index) => index + 1), value => String(value).padStart(2, "0"));
       if (previous && previous <= maxDay) birthDay.value = String(previous);
       updateBirthGate();
@@ -2018,7 +3853,34 @@
 
     function updateBirthGate() {
       const ready = Boolean(birthDay.value && birthMonth.value && birthYear.value);
-      document.querySelector('.ob-page[data-ob-page="4"] .ob-next').disabled = !ready;
+      const confirm = document.getElementById("confirmBirthDate");
+      if (confirm) confirm.disabled = !ready;
+      updateProfileGate();
+    }
+
+    function updateBirthDateSummary() {
+      if (!birthDay.value || !birthMonth.value || !birthYear.value) {
+        birthDateSummary.textContent = "Select day, month, and year";
+        return;
+      }
+      const date = new Date(
+        Number(birthYear.value),
+        Number(birthMonth.value) - 1,
+        Number(birthDay.value)
+      );
+      birthDateSummary.textContent = new Intl.DateTimeFormat("en", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function updateProfileGate() {
+      if (!createCelestialProfile) return;
+      const hasDate = Boolean(birthDay.value && birthMonth.value && birthYear.value);
+      const hasPlace = Boolean(onboardingBirthPlace.value.trim());
+      const hasTime = Boolean(onboardingBirthTime.value || birthTimeUnknown);
+      createCelestialProfile.disabled = !(hasDate && hasPlace && hasTime && profileSyncConsent.checked);
     }
 
     function zodiacFor(day, month) {
@@ -2030,11 +3892,15 @@
       if (!birthDay.value || !birthMonth.value || !birthYear.value) return;
       const sign = zodiacFor(Number(birthDay.value), Number(birthMonth.value));
       if (!sign) return;
-      document.getElementById("homeZodiacSymbol").textContent = sign.symbol;
-      document.getElementById("homeZodiacName").textContent = `${sign.name} · Hôm nay`;
+      birthPlace = onboardingBirthPlace.value.trim();
+      birthTime = birthTimeUnknown ? "" : onboardingBirthTime.value;
+      document.getElementById("homeZodiacName").textContent = `${sign.symbol} ${sign.name} · Cosmic brief demo`;
+      document.getElementById("astrologySun").textContent = sign.name;
       document.getElementById("profileIdentity").textContent = sign.name;
       document.getElementById("profileBirth").textContent =
-        `Sinh ${Number(birthDay.value)} tháng ${Number(birthMonth.value)} · Giờ sinh chưa được cung cấp`;
+        `Born ${Number(birthMonth.value)}/${Number(birthDay.value)}/${birthYear.value}` +
+        `${birthTime ? ` at ${birthTime}` : " · Birth time unknown"}` +
+        `${birthPlace ? ` · ${birthPlace}` : ""}`;
     }
 
     function renderOnboardingDots() {
@@ -2054,23 +3920,78 @@
     }
 
     function completeOnboarding() {
-      applyBirthProfile();
       onboarding.classList.add("hidden");
-      showView("today");
-      showToast(onboardingGoal ? "Đã cá nhân hoá trải nghiệm ban đầu." : "Bạn có thể cá nhân hoá sau trong Hồ sơ.");
+      preFunnel.classList.remove("hidden");
+      showFunnelStage("exit-inter");
+    }
+
+    function startPersonalization(hasProfile) {
+      clearInterval(personalizationTimer);
+      birthPickerModal.classList.remove("open");
+      if (hasProfile) applyBirthProfile();
+      showFunnelStage("personalization-loading");
+
+      const percent = document.getElementById("syncPercent");
+      const bar = document.getElementById("syncBar");
+      const status = document.getElementById("syncStatus");
+      const title = document.getElementById("syncTitle");
+      const track = document.querySelector(".sync-track");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const duration = reducedMotion ? 500 : 4200;
+      const startedAt = performance.now();
+      let progress = 0;
+
+      const renderProgress = () => {
+        percent.textContent = String(progress);
+        bar.style.width = `${progress}%`;
+        track.setAttribute("aria-valuenow", String(progress));
+        if (!hasProfile) {
+          status.textContent = progress < 100
+            ? "Preparing a private starter experience…"
+            : "Your starter experience is ready.";
+        } else if (progress < 24) {
+          status.textContent = "Validating your birth details…";
+        } else if (progress < 52) {
+          status.textContent = "Calculating chart coordinates…";
+        } else if (progress < 80) {
+          status.textContent = "Syncing your personalization profile…";
+        } else if (progress < 100) {
+          status.textContent = "Preparing your first Cosmic Brief…";
+        } else {
+          title.textContent = "Your celestial profile is ready";
+          status.textContent = "Welcome to your personal sky.";
+        }
+      };
+
+      renderProgress();
+      personalizationTimer = setInterval(() => {
+        progress = Math.min(
+          100,
+          Math.round(((performance.now() - startedAt) / duration) * 100)
+        );
+        renderProgress();
+        if (progress === 100) {
+          clearInterval(personalizationTimer);
+          setTimeout(enterToday, reducedMotion ? 180 : 720);
+        }
+      }, 50);
     }
 
     function resetOnboardingState() {
-      onboardingGoal = "";
-      document.querySelectorAll(".ob-option").forEach(option => {
-        option.classList.remove("selected");
-        option.setAttribute("aria-checked", "false");
-      });
-      document.querySelector('.ob-page[data-ob-page="2"] .ob-next').disabled = true;
       birthDay.value = "";
       birthMonth.value = "";
       birthYear.value = "";
+      onboardingBirthPlace.value = "";
+      onboardingBirthTime.value = "";
+      profileSyncConsent.checked = false;
+      birthTimeUnknown = false;
+      profileGender = "";
+      document.querySelector("[data-birth-time-unknown]")?.classList.remove("selected");
+      document.querySelectorAll("[data-gender]").forEach(option => option.classList.remove("selected"));
+      birthPickerModal.classList.remove("open");
       updateDayOptions();
+      updateBirthDateSummary();
+      updateProfileGate();
       showOnboardingPage(0);
     }
 
@@ -2082,7 +4003,7 @@
         card.dataset.expert = expert.id;
         card.setAttribute("role", "button");
         card.tabIndex = 0;
-        card.setAttribute("aria-label", `Xem hồ sơ ${expert.name}, ${expert.title}`);
+        card.setAttribute("aria-label", `View profile ${expert.name}, ${expert.title}`);
         card.innerHTML = `
           <div class="avatar" style="--accent:${expert.accent}"><span>${expert.initials}</span></div>
           <div>
@@ -2090,15 +4011,72 @@
             <p><strong style="color:var(--paper-2);font-weight:500">${expert.title}</strong><br>${expert.description}</p>
             <div class="tags">${expert.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
           </div>
-          <span class="availability" aria-label="Sẵn sàng"></span>`;
+          <span class="availability" aria-label="Ready"></span>`;
         expertList.appendChild(card);
       });
     }
 
+    function clearViewEntrance(view) {
+      const timer = entranceCleanupTimers.get(view.dataset.view);
+      if (timer) clearTimeout(timer);
+      entranceCleanupTimers.delete(view.dataset.view);
+      view.classList.remove("entrance-ready", "entrance-run");
+      Array.from(view.children).forEach(child => {
+        child.classList.remove(
+          "entrance-item",
+          "entrance-from-top",
+          "entrance-from-bottom",
+          "entrance-from-left",
+          "entrance-from-right"
+        );
+        child.style.removeProperty("--entrance-delay");
+      });
+    }
+
+    function resetTabEntrances() {
+      animatedViews.clear();
+      document.querySelectorAll(".view").forEach(clearViewEntrance);
+    }
+
+    function prepareViewEntrance(view) {
+      clearViewEntrance(view);
+      const directions = ["bottom", "left", "right", "bottom", "top"];
+      Array.from(view.children).forEach((child, index) => {
+        const direction = child.classList.contains("topbar")
+          ? "top"
+          : directions[(index - 1 + directions.length) % directions.length];
+        child.classList.add("entrance-item", `entrance-from-${direction}`);
+        child.style.setProperty("--entrance-delay", `${Math.min(index * 82, 656)}ms`);
+      });
+      view.classList.add("entrance-ready");
+    }
+
+    function runViewEntrance(view) {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        clearViewEntrance(view);
+        return;
+      }
+      void view.offsetWidth;
+      view.classList.add("entrance-run");
+      entranceCleanupTimers.set(
+        view.dataset.view,
+        setTimeout(() => clearViewEntrance(view), 1600)
+      );
+    }
+
     function showView(name) {
+      const target = document.querySelector(`.view[data-view="${name}"]`);
+      const shouldAnimate = Boolean(target && !animatedViews.has(name));
+      if (shouldAnimate) {
+        animatedViews.add(name);
+        prepareViewEntrance(target);
+      }
       document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.dataset.view === name));
       document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.viewTarget === name));
-      document.querySelector(`.view[data-view="${name}"]`)?.scrollTo(0, 0);
+      target?.scrollTo(0, 0);
+      if (shouldAnimate) runViewEntrance(target);
+      if (!["today","astrology","tarot","experts","journal","profile"].includes(name)) return;
+      collapseBanner.classList.toggle("show", !premiumUnlocked && !adsNoFill && preFunnel.classList.contains("hidden") && onboarding.classList.contains("hidden"));
     }
 
     function openExpert(id) {
@@ -2118,8 +4096,32 @@
       document.getElementById("chatAvatar").innerHTML = `<span>${selectedExpert.initials}</span>`;
       document.getElementById("chatName").textContent = selectedExpert.name;
       document.getElementById("greeting").textContent = selectedExpert.greeting;
-      document.querySelectorAll("#chatMessages .message:not(#greeting)").forEach(m => m.remove());
+      document.querySelectorAll("#chatMessages .message:not(#greeting), #chatMessages .typing, #chatMessages .error-retry").forEach(m => m.remove());
       chat.classList.add("active");
+    }
+
+    function appendGuide(text, delay = 550) {
+      const messages = document.getElementById("chatMessages");
+      const typing = document.createElement("div");
+      typing.className = "message guide typing";
+      typing.textContent = "Typing...";
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+      setTimeout(() => {
+        typing.remove();
+        if (text === "__error__") {
+          const err = document.createElement("div");
+          err.className = "message guide error-retry";
+          err.innerHTML = `This message could not be sent. <button class="text-button" data-retry-chat>Try again</button>`;
+          messages.appendChild(err);
+        } else {
+          const guide = document.createElement("div");
+          guide.className = "message guide";
+          guide.textContent = text;
+          messages.appendChild(guide);
+        }
+        messages.scrollTop = messages.scrollHeight;
+      }, delay);
     }
 
     function showToast(message) {
@@ -2130,6 +4132,29 @@
     }
 
     document.addEventListener("click", event => {
+      const pressedControl = event.target.closest("button, [role='button']");
+      if (
+        pressedControl?.closest(".phone") &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        const ripple = document.createElement("span");
+        ripple.className = "effect-ripple";
+        ripple.style.left = `${event.clientX}px`;
+        ripple.style.top = `${event.clientY}px`;
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 760);
+      }
+
+      const ritualDeck = event.target.closest("#ritualDeck");
+      if (ritualDeck) {
+        const revealed = ritualDeck.classList.toggle("revealed");
+        document.getElementById("ritualTitle").textContent = revealed ? "The Star · Demo" : "Daily reflection";
+        document.getElementById("ritualHint").textContent = revealed
+          ? "Hope, direction, and faith are being renewed."
+          : "Tap the deck to see the reveal effect";
+        return;
+      }
+
       if (event.target.closest("#closeSplashInter")) {
         enterLanguage();
         return;
@@ -2156,24 +4181,237 @@
 
       const adClose = event.target.closest(".ad-close");
       if (adClose) {
-        showOnboardingPage(onboardingPage + 1);
+        const next = adClose.dataset.funnelNext;
+        if (next === "today") enterToday();
+        else if (next) showFunnelStage(next);
+        else if (!onboarding.classList.contains("hidden")) showOnboardingPage(onboardingPage + 1);
         return;
       }
 
-      const goal = event.target.closest("[data-goal]");
-      if (goal) {
-        onboardingGoal = goal.dataset.goal;
-        document.querySelectorAll("[data-goal]").forEach(option => {
-          const selected = option === goal;
+      const funnelNext = event.target.closest("[data-funnel-next]");
+      if (funnelNext) {
+        const next = funnelNext.dataset.funnelNext;
+        if (next === "today") enterToday();
+        else if (next === "uninstall-warn" || next === "uninstall-reason" || next === "welcome-back") {
+          preFunnel.classList.remove("hidden");
+          onboarding.classList.add("hidden");
+          closeAllScreens();
+          showFunnelStage(next);
+        } else {
+          preFunnel.classList.remove("hidden");
+          showFunnelStage(next);
+        }
+        return;
+      }
+
+      if (event.target.closest("[data-consent-yes], [data-consent-no]")) {
+        afterConsent();
+        return;
+      }
+
+      if (event.target.closest("[data-close-dialog]")) {
+        closeDialog();
+        return;
+      }
+      if (event.target.closest("[data-close-sheet]")) {
+        closeSheet();
+        return;
+      }
+      if (event.target.closest("[data-open-birth-picker]")) {
+        birthPickerModal.classList.add("open");
+        return;
+      }
+      if (event.target.closest("[data-close-birth-picker]")) {
+        birthPickerModal.classList.remove("open");
+        return;
+      }
+      if (event.target.closest("[data-confirm-birth-date]")) {
+        updateBirthDateSummary();
+        birthPickerModal.classList.remove("open");
+        updateProfileGate();
+        return;
+      }
+      const unknownTime = event.target.closest("[data-birth-time-unknown]");
+      if (unknownTime) {
+        birthTimeUnknown = !birthTimeUnknown;
+        unknownTime.classList.toggle("selected", birthTimeUnknown);
+        unknownTime.setAttribute("aria-pressed", String(birthTimeUnknown));
+        if (birthTimeUnknown) onboardingBirthTime.value = "";
+        updateProfileGate();
+        return;
+      }
+      const genderOption = event.target.closest("[data-gender]");
+      if (genderOption) {
+        profileGender = genderOption.dataset.gender;
+        document.querySelectorAll("[data-gender]").forEach(option => {
+          const selected = option === genderOption;
           option.classList.toggle("selected", selected);
-          option.setAttribute("aria-checked", String(selected));
+          option.setAttribute("aria-pressed", String(selected));
         });
-        document.querySelector('.ob-page[data-ob-page="2"] .ob-next').disabled = false;
+        return;
+      }
+      if (event.target.closest("[data-start-personalization]")) {
+        if (!createCelestialProfile.disabled) startPersonalization(true);
+        return;
+      }
+      if (event.target.closest("[data-start-personalization-skip]")) {
+        startPersonalization(false);
+        return;
+      }
+      if (event.target.closest("[data-back-all]")) {
+        closeAllScreens();
+        closeSheet();
+        const viewTarget = event.target.closest("[data-view-target]");
+        if (viewTarget) showView(viewTarget.dataset.viewTarget);
+        return;
+      }
+      if (event.target.closest("[data-back]")) {
+        closeScreen();
         return;
       }
 
-      if (event.target.closest("[data-skip-birth]")) {
-        completeOnboarding();
+      const qa = event.target.closest("[data-qa]");
+      if (qa) {
+        const mode = qa.dataset.qa;
+        if (mode === "first-run") startFirstRunFunnel();
+        if (mode === "returning") startReturningFunnel();
+        if (mode === "uninstall") {
+          preFunnel.classList.remove("hidden");
+          onboarding.classList.add("hidden");
+          closeAllScreens();
+          showFunnelStage("uninstall-warn");
+        }
+        if (mode === "nofill") {
+          adsNoFill = !adsNoFill;
+          showToast(adsNoFill ? "Ad no-fill · collapse / fail-open." : "Ad fill restored.");
+          collapseBanner.classList.toggle("show", !premiumUnlocked && !adsNoFill && preFunnel.classList.contains("hidden"));
+          renderStack();
+        }
+        if (mode === "loading") openScreen("loading");
+        if (mode === "offline") openScreen("offline");
+        return;
+      }
+
+      const dialogBtn = event.target.closest("[data-dialog]");
+      if (dialogBtn) {
+        openDialog(dialogBtn.dataset.dialog);
+        return;
+      }
+      const sheetBtn = event.target.closest("[data-sheet]");
+      if (sheetBtn) {
+        openSheet(sheetBtn.dataset.sheet);
+        if (sheetBtn.hasAttribute("data-close-sheet")) closeSheet();
+        return;
+      }
+
+      const promptOption = event.target.closest("[data-tarot-prompt]");
+      if (promptOption) {
+        const options = tarotPromptOptions[selectedSpread] || tarotPromptOptions.daily;
+        tarotQuestion = options[Number(promptOption.dataset.tarotPrompt)] || "";
+        const input = document.getElementById("tarotQ");
+        if (input) {
+          input.value = tarotQuestion;
+          input.focus();
+        }
+        document.querySelectorAll("[data-tarot-prompt]").forEach(option => {
+          const selected = option === promptOption;
+          option.classList.toggle("selected", selected);
+          option.setAttribute("aria-pressed", String(selected));
+        });
+        return;
+      }
+
+      const openBtn = event.target.closest("[data-open]");
+      if (openBtn) {
+        if (openBtn.hasAttribute("data-close-sheet")) closeSheet();
+        if (openBtn.hasAttribute("data-close-dialog")) closeDialog();
+        const payload = openBtn.dataset.spread || openBtn.dataset.sign || openBtn.dataset.entry;
+        if (openBtn.dataset.open === "tarot-shuffle") {
+          tarotQuestion = document.getElementById("tarotQ")?.value.trim() || "";
+        }
+        openScreen(openBtn.dataset.open, payload);
+        return;
+      }
+
+      if (event.target.closest("[data-start-chat]")) {
+        closeAllScreens();
+        openChat();
+        return;
+      }
+
+      const pick = event.target.closest("[data-pick-card]");
+      if (pick) {
+        const index = Number(pick.dataset.pickCard);
+        const max = ["love","money","spread3"].includes(selectedSpread) ? 3 : 1;
+        if (selectedCards.includes(index)) selectedCards = selectedCards.filter(i => i !== index);
+        else if (selectedCards.length < max) selectedCards = [...selectedCards, index];
+        renderStack();
+        return;
+      }
+
+      const plan = event.target.closest("[data-plan]");
+      if (plan) {
+        selectedPlan = plan.dataset.plan;
+        renderStack();
+        return;
+      }
+      if (event.target.closest("[data-purchase]")) {
+        premiumUnlocked = true;
+        collapseBanner.classList.remove("show");
+        openScreen("restore");
+        return;
+      }
+      if (event.target.closest("[data-save-journal]")) {
+        showToast("Saved to Journal.");
+        closeAllScreens();
+        showView("journal");
+        return;
+      }
+      if (event.target.closest("[data-save-birth]")) {
+        birthTime = document.getElementById("birthTimeInput")?.value || birthTime;
+        birthPlace = document.getElementById("birthPlaceInput")?.value || birthPlace;
+        showToast("Birth data saved on this device.");
+        closeScreen();
+        return;
+      }
+      if (event.target.closest("[data-clear-birth]")) {
+        birthTime = "";
+        birthPlace = "";
+        showToast("Birth data deleted.");
+        return;
+      }
+      if (event.target.closest("[data-toggle-tts]")) {
+        ttsOn = !ttsOn;
+        openSheet("tts");
+        return;
+      }
+      const toggle = event.target.closest("[data-toggle]");
+      if (toggle) {
+        toggle.classList.toggle("on");
+        if (toggle.dataset.toggle === "reminder") reminderOn = toggle.classList.contains("on");
+        return;
+      }
+      const tab = event.target.closest("[data-tab]");
+      if (tab) {
+        tab.parentElement.querySelectorAll(".chip").forEach(chip => chip.classList.toggle("on", chip === tab));
+        const copy = {
+          day: ["Today", "Pause before drawing conclusions. Ask one more question before deciding."],
+          week: ["This week", "Mercury trine Jupiter opens a window for learning. Use it for planning, not as a guarantee."],
+          month: ["This month", "Saturn emphasizes discipline. Break your goal into smaller steps."]
+        }[tab.dataset.tab];
+        const body = document.getElementById("horoscopeBody");
+        if (body && copy) body.innerHTML = `<div class="zodiac-mark">☉</div><div><h3>${copy[0]}</h3><p>${copy[1]}</p></div>`;
+        return;
+      }
+      const ab = event.target.closest("[data-ab]");
+      if (ab) {
+        ab.parentElement.querySelectorAll(".chip").forEach(chip => chip.classList.toggle("on", chip === ab));
+        document.body.dataset.layout = ab.dataset.ab;
+        return;
+      }
+      const uninstallReason = event.target.closest("[data-uninstall-reason]");
+      if (uninstallReason) {
+        document.querySelectorAll("[data-uninstall-reason]").forEach(btn => btn.classList.toggle("selected", btn === uninstallReason));
         return;
       }
 
@@ -2183,7 +4421,11 @@
       }
 
       const viewTarget = event.target.closest("[data-view-target]");
-      if (viewTarget) showView(viewTarget.dataset.viewTarget);
+      if (viewTarget) {
+        closeAllScreens();
+        showView(viewTarget.dataset.viewTarget);
+        return;
+      }
 
       const expertTarget = event.target.closest("[data-expert]");
       if (expertTarget) openExpert(expertTarget.dataset.expert);
@@ -2207,6 +4449,19 @@
       const expertCard = event.target.closest(".expert-card");
       if (expertCard) openExpert(expertCard.dataset.expert);
 
+      const retryChat = event.target.closest("[data-retry-chat]");
+      if (retryChat) {
+        retryChat.closest(".error-retry")?.remove();
+        appendGuide("I received it. Would you like to continue with your feelings, your options, or one small step?");
+        return;
+      }
+
+      const genericChip = event.target.closest(".chip-row .chip");
+      if (genericChip && !genericChip.dataset.open && !genericChip.dataset.tab && !genericChip.dataset.ab && !genericChip.dataset.pickCard && !genericChip.dataset.sheet && !genericChip.dataset.plan) {
+        genericChip.parentElement.querySelectorAll(".chip").forEach(chip => chip.classList.toggle("on", chip === genericChip));
+        return;
+      }
+
       const suggestion = event.target.closest(".suggestion");
       if (suggestion) {
         document.getElementById("chatInput").value = suggestion.textContent.trim();
@@ -2222,8 +4477,10 @@
     });
 
     document.getElementById("closeDetail").addEventListener("click", () => detail.classList.remove("active"));
-    document.getElementById("startChat").addEventListener("click", openChat);
-    document.getElementById("closeChat").addEventListener("click", () => chat.classList.remove("active"));
+    document.getElementById("closeChat").addEventListener("click", () => {
+      chat.classList.remove("active");
+      openScreen("chat-summary");
+    });
     document.getElementById("languageConfirm").addEventListener("click", () => {
       if (!selectedLanguage) return;
       if (selectedLanguage.variants.length > 0) openLanguageSub();
@@ -2236,6 +4493,15 @@
     birthMonth.addEventListener("change", updateDayOptions);
     birthYear.addEventListener("change", updateDayOptions);
     birthDay.addEventListener("change", updateBirthGate);
+    onboardingBirthPlace.addEventListener("input", updateProfileGate);
+    onboardingBirthTime.addEventListener("input", () => {
+      if (onboardingBirthTime.value) {
+        birthTimeUnknown = false;
+        document.querySelector("[data-birth-time-unknown]")?.classList.remove("selected");
+      }
+      updateProfileGate();
+    });
+    profileSyncConsent.addEventListener("change", updateProfileGate);
 
     onboarding.addEventListener("pointerdown", event => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -2264,6 +4530,19 @@
       if (delta > 0 && onboardingPage > 0) showOnboardingPage(onboardingPage - 1);
     });
 
+    let stackSwipeX = null;
+    stackEl.addEventListener("pointerdown", event => {
+      if (event.target.closest("button, input, textarea, select")) return;
+      stackSwipeX = event.clientX;
+    });
+    stackEl.addEventListener("pointerup", event => {
+      if (stackSwipeX === null) return;
+      const delta = event.clientX - stackSwipeX;
+      stackSwipeX = null;
+      if (delta > 64) closeScreen();
+    });
+    stackEl.addEventListener("pointercancel", () => { stackSwipeX = null; });
+
     document.getElementById("chatForm").addEventListener("submit", event => {
       event.preventDefault();
       const input = document.getElementById("chatInput");
@@ -2276,13 +4555,19 @@
       messages.appendChild(user);
       input.value = "";
       messages.scrollTop = messages.scrollHeight;
-      setTimeout(() => {
-        const guide = document.createElement("div");
-        guide.className = "message guide";
-        guide.textContent = "Cảm ơn bạn đã chia sẻ. Trước khi cùng nhìn sâu hơn, điều bạn muốn nhận được sau cuộc trò chuyện này là hiểu rõ cảm xúc, cân nhắc lựa chọn hay tìm một bước hành động cụ thể?";
-        messages.appendChild(guide);
-        messages.scrollTop = messages.scrollHeight;
-      }, 550);
+      const fail = /fail|error|retry/i.test(value);
+      appendGuide(
+        fail
+          ? "__error__"
+          : "Thank you for sharing. Before we explore further, would you like to understand your feelings, weigh your options, or identify one concrete next step?"
+      );
+    });
+
+    document.querySelectorAll(".view").forEach(view => {
+      view.addEventListener("scroll", () => {
+        const wheel = view.querySelector(".chart-wheel");
+        if (wheel) wheel.style.translate = `0 ${Math.min(view.scrollTop * .08, 16)}px`;
+      }, { passive: true });
     });
 
     renderExperts();
