@@ -1,0 +1,2299 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101126" />
+  <title>AstroDaily — Product Redesign Prototype</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap");
+
+    :root {
+      --ink-950: #0a0b18;
+      --ink-900: #101126;
+      --ink-850: #17182f;
+      --ink-800: #1e203b;
+      --ink-750: #282a49;
+      --ink-700: #323453;
+      --paper: #f8f3eb;
+      --paper-2: #e9e1d6;
+      --muted: #a9a8bc;
+      --muted-2: #777994;
+      --violet: #a994ed;
+      --violet-2: #d6ccff;
+      --coral: #e89a8f;
+      --sage: #9ab5a1;
+      --gold: #d3b778;
+      --danger: #e08888;
+      --stroke: rgba(255, 255, 255, 0.1);
+      --stroke-strong: rgba(255, 255, 255, 0.18);
+      --glass: rgba(255, 255, 255, 0.055);
+      --r-xl: 28px;
+      --r-lg: 22px;
+      --r-md: 16px;
+      --r-sm: 12px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(169, 148, 237, .14), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(232, 154, 143, .11), transparent 28%),
+        var(--ink-950);
+      color: var(--paper);
+      font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, textarea { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--violet-2);
+      outline-offset: 3px;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) minmax(390px, 480px) minmax(260px, 340px);
+      gap: clamp(24px, 4vw, 64px);
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .brief, .notes { max-width: 320px; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--violet-2);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .brief h1 {
+      margin: 0;
+      font: 500 clamp(40px, 5vw, 64px)/.96 "Newsreader", Georgia, serif;
+      letter-spacing: -.035em;
+    }
+    .brief .lead {
+      margin: 20px 0 26px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    .principles {
+      display: grid;
+      gap: 8px;
+    }
+    .principle {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 0;
+      border-top: 1px solid var(--stroke);
+      color: var(--paper-2);
+      font-size: 13px;
+    }
+    .principle span {
+      width: 24px;
+      color: var(--muted-2);
+      font-size: 11px;
+    }
+
+    .prototype-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 26px;
+      padding: 8px 11px;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .prototype-label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    .phone {
+      position: relative;
+      width: min(100%, 430px);
+      height: min(880px, calc(100vh - 40px));
+      min-height: 700px;
+      margin: auto;
+      overflow: hidden;
+      border: 1px solid var(--stroke-strong);
+      border-radius: 42px;
+      background: var(--ink-900);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .55), inset 0 0 0 7px rgba(255,255,255,.018);
+    }
+    .phone::before {
+      content: "";
+      position: absolute;
+      z-index: 20;
+      top: 12px;
+      left: 50%;
+      width: 98px;
+      height: 27px;
+      border-radius: 999px;
+      background: #070811;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .phone-screen {
+      height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 30% -5%, rgba(169,148,237,.17), transparent 27%),
+        var(--ink-900);
+    }
+    .status {
+      position: absolute;
+      z-index: 15;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 26px 0;
+      color: var(--paper-2);
+      font-size: 11px;
+      font-weight: 700;
+      pointer-events: none;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+    .status-icons i { display: block; width: 13px; height: 7px; border: 1px solid currentColor; border-radius: 2px; }
+    .status-icons i:last-child { width: 16px; background: currentColor; }
+
+    .view {
+      display: none;
+      height: 100%;
+      overflow-y: auto;
+      padding: 54px 20px 108px;
+      scrollbar-width: none;
+      animation: enter .35s var(--ease);
+    }
+    .view::-webkit-scrollbar { display: none; }
+    .view.active { display: block; }
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      margin-bottom: 18px;
+    }
+    .brand {
+      font: 500 24px/1 "Newsreader", Georgia, serif;
+      letter-spacing: -.02em;
+    }
+    .icon-button {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid var(--stroke);
+      border-radius: 50%;
+      background: var(--glass);
+      cursor: pointer;
+      transition: .2s var(--ease);
+    }
+    .icon-button:hover { background: var(--ink-750); transform: translateY(-1px); }
+    .icon-button svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+    .section-kicker {
+      margin: 0 0 5px;
+      color: var(--violet-2);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .display {
+      margin: 0;
+      font: 500 34px/1.05 "Newsreader", Georgia, serif;
+      letter-spacing: -.025em;
+    }
+    .subcopy {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .daily-hero {
+      position: relative;
+      min-height: 300px;
+      margin-top: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(214,204,255,.18);
+      border-radius: var(--r-xl);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(214,204,255,.17), transparent 36%),
+        linear-gradient(150deg, #24264a, #17182f 65%);
+    }
+    .daily-hero::before,
+    .daily-hero::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+    }
+    .daily-hero::before { width: 260px; height: 260px; top: -105px; right: -90px; }
+    .daily-hero::after { width: 180px; height: 180px; bottom: -100px; left: -45px; }
+    .hero-meta {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      padding: 19px 19px 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .tarot-card {
+      position: relative;
+      z-index: 2;
+      width: 116px;
+      height: 188px;
+      margin: 20px auto 0;
+      border: 1px solid rgba(211,183,120,.62);
+      border-radius: 14px;
+      background: linear-gradient(145deg, #33365e, #18192f);
+      box-shadow: 0 18px 45px rgba(0,0,0,.4);
+      transform: rotate(-2.5deg);
+    }
+    .tarot-card .inner {
+      position: absolute;
+      inset: 7px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(211,183,120,.35);
+      border-radius: 9px;
+    }
+    .moon {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 30px rgba(211,183,120,.18);
+    }
+    .moon::after {
+      content: "";
+      position: absolute;
+      width: 58px;
+      height: 58px;
+      top: -4px;
+      left: 17px;
+      border-radius: 50%;
+      background: #282a49;
+    }
+    .star-field, .star-field::before, .star-field::after {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--paper);
+      content: "";
+    }
+    .star-field { top: 22px; left: 19px; box-shadow: 65px 12px var(--paper), 15px 112px var(--gold), 72px 135px var(--paper); }
+    .star-field::before { top: 72px; left: 68px; }
+    .star-field::after { top: 34px; left: 11px; }
+    .hero-action {
+      position: absolute;
+      z-index: 3;
+      right: 16px;
+      bottom: 16px;
+      left: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 15px;
+      border: 0;
+      border-radius: 15px;
+      background: var(--paper);
+      color: var(--ink-900);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s var(--ease);
+    }
+    .hero-action:hover { transform: translateY(-2px); background: #fff; }
+    .hero-action svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      margin: 28px 0 13px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font: 500 22px/1.1 "Newsreader", Georgia, serif;
+    }
+    .text-button {
+      padding: 3px 0;
+      border: 0;
+      background: none;
+      color: var(--violet-2);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .insight-card {
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      gap: 13px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-md);
+      background: var(--glass);
+    }
+    .zodiac-mark {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(169,148,237,.12);
+      color: var(--violet-2);
+      font: 500 28px/1 "Newsreader", serif;
+    }
+    .insight-card h3, .reading-card h3, .expert-card h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .insight-card p, .reading-card p, .expert-card p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.45;
+    }
+    .score {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .reflection {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: var(--r-md);
+      background: var(--paper);
+      color: var(--ink-900);
+    }
+    .reflection small {
+      color: #6d6880;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .reflection p {
+      margin: 8px 0 12px;
+      font: 500 19px/1.25 "Newsreader", Georgia, serif;
+    }
+    .reflection button {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #5b4d92;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .chat-promo {
+      position: relative;
+      min-height: 150px;
+      padding: 18px 118px 18px 18px;
+      overflow: hidden;
+      border: 1px solid rgba(232,154,143,.2);
+      border-radius: var(--r-lg);
+      background: linear-gradient(140deg, rgba(232,154,143,.16), rgba(169,148,237,.09));
+    }
+    .chat-promo h3 {
+      margin: 5px 0 7px;
+      font: 500 22px/1.1 "Newsreader", Georgia, serif;
+    }
+    .chat-promo p { margin: 0 0 15px; color: var(--muted); font-size: 11.5px; line-height: 1.45; }
+    .mini-cta {
+      padding: 8px 12px;
+      border: 1px solid var(--stroke-strong);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .orbit-art {
+      position: absolute;
+      right: 14px;
+      bottom: -4px;
+      width: 106px;
+      height: 126px;
+    }
+    .orbit-art .head {
+      position: absolute;
+      top: 16px;
+      left: 30px;
+      width: 46px;
+      height: 54px;
+      border-radius: 48% 48% 44% 44%;
+      background: #ba8d80;
+    }
+    .orbit-art .hair {
+      position: absolute;
+      top: 7px;
+      left: 21px;
+      width: 65px;
+      height: 64px;
+      border-radius: 50% 50% 42% 45%;
+      border-top: 18px solid #28243c;
+      border-right: 11px solid #28243c;
+      transform: rotate(-8deg);
+    }
+    .orbit-art .body {
+      position: absolute;
+      left: 16px;
+      bottom: -14px;
+      width: 78px;
+      height: 70px;
+      border-radius: 45px 45px 8px 8px;
+      background: #6d5b9e;
+    }
+    .orbit-art::before, .orbit-art::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50%;
+    }
+    .orbit-art::before { inset: 0; transform: rotate(22deg); }
+    .orbit-art::after { inset: 11px -8px; transform: rotate(-28deg); }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin: 18px -20px 20px;
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .filter.active { border-color: var(--violet); background: var(--violet); color: var(--ink-900); font-weight: 700; }
+
+    .reading-list, .expert-list { display: grid; gap: 10px; }
+    .reading-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 58px 1fr 22px;
+      gap: 13px;
+      align-items: center;
+      min-height: 88px;
+      padding: 13px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-md);
+      background: var(--glass);
+      cursor: pointer;
+      transition: .2s var(--ease);
+    }
+    .reading-card:hover, .expert-card:hover { transform: translateY(-2px); border-color: var(--stroke-strong); background: rgba(255,255,255,.075); }
+    .reading-symbol {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 62px;
+      border-radius: 13px;
+      background: var(--ink-800);
+      color: var(--gold);
+    }
+    .reading-symbol svg { width: 31px; height: 31px; fill: none; stroke: currentColor; stroke-width: 1.35; }
+    .chevron { color: var(--muted-2); font-size: 22px; }
+    .reading-tag {
+      display: inline-block;
+      margin-top: 7px;
+      color: var(--violet-2);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .expert-card {
+      display: grid;
+      grid-template-columns: 62px 1fr auto;
+      gap: 13px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-md);
+      background: var(--glass);
+      cursor: pointer;
+      transition: .2s var(--ease);
+    }
+    .avatar {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 60px;
+      height: 60px;
+      overflow: hidden;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--accent, var(--violet)) 23%, var(--ink-800));
+      color: var(--paper);
+      font: 500 19px/1 "Newsreader", serif;
+    }
+    .avatar::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid color-mix(in srgb, var(--accent, var(--violet)) 60%, transparent);
+      border-radius: 50%;
+    }
+    .avatar span { position: relative; z-index: 1; }
+    .expert-name-row { display: flex; align-items: center; gap: 7px; }
+    .ai-badge {
+      padding: 3px 6px;
+      border: 1px solid var(--stroke-strong);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+    .tags { display: flex; gap: 5px; margin-top: 8px; }
+    .tag {
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: var(--ink-750);
+      color: var(--paper-2);
+      font-size: 8.5px;
+    }
+    .availability {
+      align-self: start;
+      width: 7px;
+      height: 7px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: var(--sage);
+      box-shadow: 0 0 0 4px rgba(154,181,161,.1);
+    }
+
+    .trust-note {
+      margin: 0 0 18px;
+      padding: 11px 13px;
+      border: 1px solid rgba(211,183,120,.18);
+      border-radius: var(--r-sm);
+      background: rgba(211,183,120,.07);
+      color: #c8c0aa;
+      font-size: 10.5px;
+      line-height: 1.45;
+    }
+
+    .journal-calendar {
+      padding: 16px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-lg);
+      background: var(--glass);
+    }
+    .calendar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .calendar-head strong { font: 500 18px/1 "Newsreader", serif; }
+    .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; text-align: center; }
+    .day-name { color: var(--muted-2); font-size: 9px; }
+    .day {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      color: var(--muted);
+      font-size: 10px;
+    }
+    .day.has-entry { background: var(--ink-750); color: var(--paper); }
+    .day.today { background: var(--violet); color: var(--ink-900); font-weight: 700; }
+    .journal-entry {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 13px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--stroke);
+    }
+    .entry-card {
+      width: 42px;
+      height: 62px;
+      border: 1px solid rgba(211,183,120,.45);
+      border-radius: 7px;
+      background: var(--ink-800);
+    }
+    .journal-entry time { color: var(--muted-2); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+    .journal-entry h3 { margin: 4px 0; font-size: 13px; }
+    .journal-entry p { margin: 0; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+
+    .bottom-nav {
+      position: absolute;
+      z-index: 12;
+      right: 10px;
+      bottom: 10px;
+      left: 10px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 8px 4px 7px;
+      border: 1px solid var(--stroke);
+      border-radius: 24px;
+      background: rgba(20, 21, 42, .92);
+      backdrop-filter: blur(18px);
+    }
+    .nav-item {
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      padding: 5px 2px;
+      border: 0;
+      border-radius: 14px;
+      background: transparent;
+      color: var(--muted-2);
+      font-size: 8.5px;
+      cursor: pointer;
+      transition: .2s var(--ease);
+    }
+    .nav-item svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-item.active { color: var(--paper); background: rgba(169,148,237,.12); }
+
+    .expert-detail, .chat-view {
+      position: absolute;
+      z-index: 30;
+      inset: 0;
+      display: none;
+      background:
+        radial-gradient(circle at 50% 0, rgba(169,148,237,.17), transparent 30%),
+        var(--ink-900);
+      animation: slide .38s var(--ease);
+    }
+    .expert-detail.active, .chat-view.active { display: block; }
+    @keyframes slide {
+      from { transform: translateX(20px); opacity: .6; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .detail-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding: 54px 20px 110px;
+      scrollbar-width: none;
+    }
+    .detail-top { display: flex; justify-content: space-between; align-items: center; }
+    .detail-identity { display: grid; justify-items: center; margin: 24px 0 20px; text-align: center; }
+    .detail-identity .avatar { width: 90px; height: 90px; font-size: 27px; }
+    .detail-identity h2 { margin: 14px 0 4px; font: 500 31px/1 "Newsreader", serif; }
+    .detail-identity p { max-width: 320px; margin: 7px auto 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .scope-box {
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid var(--stroke);
+      border-radius: var(--r-md);
+      background: var(--glass);
+    }
+    .scope-box h3 { margin: 0 0 11px; font-size: 12px; }
+    .scope-list { display: grid; gap: 10px; }
+    .scope-row { display: grid; grid-template-columns: 20px 1fr; gap: 8px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .scope-row svg { width: 17px; height: 17px; fill: none; stroke: var(--sage); stroke-width: 1.8; }
+    .sticky-cta {
+      position: absolute;
+      right: 20px;
+      bottom: 22px;
+      left: 20px;
+      z-index: 2;
+    }
+    .primary {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 16px;
+      background: var(--paper);
+      color: var(--ink-900);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 34px rgba(0,0,0,.24);
+    }
+
+    .chat-view { z-index: 40; }
+    .chat-layout {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100%;
+      padding-top: 47px;
+    }
+    .chat-header {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 16px 12px;
+      border-bottom: 1px solid var(--stroke);
+      background: rgba(16,17,38,.9);
+      backdrop-filter: blur(14px);
+    }
+    .chat-header .avatar { width: 38px; height: 38px; font-size: 13px; }
+    .chat-title strong { display: block; font-size: 12px; }
+    .chat-title span { color: var(--sage); font-size: 9px; }
+    .chat-messages {
+      overflow-y: auto;
+      padding: 20px 16px;
+      scrollbar-width: none;
+    }
+    .message {
+      max-width: 84%;
+      margin-bottom: 11px;
+      padding: 12px 13px;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 1.5;
+      animation: enter .25s var(--ease);
+    }
+    .message.guide {
+      border: 1px solid var(--stroke);
+      border-bottom-left-radius: 5px;
+      background: var(--glass);
+      color: var(--paper-2);
+    }
+    .message.user {
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+      background: var(--violet);
+      color: var(--ink-900);
+    }
+    .chat-label {
+      margin: 12px 0 7px;
+      color: var(--muted-2);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .suggestions { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
+    .suggestion {
+      flex: 0 0 auto;
+      max-width: 220px;
+      padding: 9px 11px;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--paper-2);
+      font-size: 10px;
+      cursor: pointer;
+    }
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr 44px;
+      gap: 9px;
+      padding: 11px 14px 22px;
+      border-top: 1px solid var(--stroke);
+      background: rgba(16,17,38,.96);
+    }
+    .composer input {
+      width: 100%;
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      background: var(--ink-800);
+      color: var(--paper);
+      padding: 0 14px;
+      font-size: 12px;
+    }
+    .composer input::placeholder { color: var(--muted-2); }
+    .send {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--violet);
+      color: var(--ink-900);
+      cursor: pointer;
+    }
+    .send svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+    .notes h2 { margin: 0 0 16px; font: 500 25px/1.1 "Newsreader", serif; }
+    .note-list { display: grid; gap: 14px; }
+    .note {
+      padding-left: 14px;
+      border-left: 1px solid var(--stroke-strong);
+    }
+    .note strong { display: block; margin-bottom: 5px; color: var(--paper-2); font-size: 12px; }
+    .note p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .token-row { display: flex; gap: 8px; margin-top: 20px; }
+    .swatch {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--stroke);
+      border-radius: 50%;
+      background: var(--swatch);
+    }
+
+    .pre-funnel {
+      position: absolute;
+      z-index: 70;
+      inset: 0;
+      overflow: hidden;
+      background: var(--ink-900);
+    }
+    .pre-funnel.hidden { display: none; }
+    .funnel-stage {
+      display: none;
+      height: 100%;
+      animation: enter .3s var(--ease);
+    }
+    .funnel-stage.active { display: flex; }
+    .splash-stage {
+      position: relative;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(169,148,237,.2), transparent 30%),
+        linear-gradient(180deg, var(--ink-850), var(--ink-900));
+    }
+    .splash-stage::before, .splash-stage::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(214,204,255,.12);
+      border-radius: 50%;
+    }
+    .splash-stage::before { width: 360px; height: 360px; top: 70px; right: -150px; }
+    .splash-stage::after { width: 260px; height: 260px; top: 132px; left: -124px; }
+    .splash-brand {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      margin-bottom: 126px;
+    }
+    .splash-mark {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 128px;
+      height: 128px;
+      border: 1px solid rgba(211,183,120,.35);
+      border-radius: 36px;
+      background: rgba(169,148,237,.09);
+    }
+    .splash-mark::before {
+      content: "";
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+    .splash-mark::after {
+      content: "";
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--ink-850);
+      transform: translate(18px, -8px);
+    }
+    .splash-brand h1 { margin: 18px 0 4px; font: 500 29px/1 "Newsreader", serif; }
+    .splash-brand p { margin: 0; color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .splash-bottom {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .splash-progress {
+      width: 50%;
+      height: 2px;
+      margin: 0 auto 16px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: var(--ink-700);
+    }
+    .splash-progress::after {
+      content: "";
+      display: block;
+      width: 42%;
+      height: 100%;
+      background: var(--violet);
+      animation: loading 1.15s ease-in-out infinite alternate;
+    }
+    @keyframes loading { to { transform: translateX(138%); } }
+    .splash-ad {
+      height: 104px;
+      margin: 0;
+      border-right: 0;
+      border-bottom: 0;
+      border-left: 0;
+      border-radius: 0;
+      background: rgba(255,255,255,.045);
+      transition: opacity .28s var(--ease);
+    }
+    .splash-ad.waiting { opacity: 0; }
+    .inter-stage {
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 54px 18px 22px;
+      background: #ecebf0;
+      color: #252635;
+    }
+    .inter-stage .ad-topline { display: flex; justify-content: space-between; align-items: center; color: #6c6d79; font-size: 9px; }
+    .inter-creative {
+      display: grid;
+      place-items: center;
+      min-height: 430px;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(169,148,237,.55), transparent 27%),
+        #d7d5e2;
+      text-align: center;
+    }
+    .inter-creative strong { display: block; font: 500 28px/1 "Newsreader", serif; }
+    .inter-creative span { display: block; max-width: 230px; margin-top: 8px; color: #6d6c77; font-size: 11px; line-height: 1.45; }
+
+    .language-stage {
+      flex-direction: column;
+      padding-top: 48px;
+      background:
+        radial-gradient(circle at 50% -12%, rgba(169,148,237,.16), transparent 28%),
+        var(--ink-900);
+    }
+    .language-title {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      align-items: center;
+      padding: 5px 20px 8px;
+    }
+    .language-title.no-back { grid-template-columns: 1fr; }
+    .language-title h2 {
+      margin: 0;
+      font: 500 27px/1.1 "Newsreader", serif;
+      text-align: center;
+    }
+    .language-title.no-back h2 { text-align: left; }
+    .language-ad {
+      flex: 0 0 auto;
+      margin: 8px 16px 0;
+    }
+    .language-ad.small { height: 72px; }
+    .language-ad.full { height: 110px; margin: 0; border-right: 0; border-bottom: 0; border-left: 0; border-radius: 0; }
+    .placement-name {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted-2);
+      font-size: 7px;
+      letter-spacing: .05em;
+    }
+    .language-list {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 9px 0;
+      scrollbar-width: none;
+    }
+    .language-list::-webkit-scrollbar { display: none; }
+    .language-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 32px 1fr 28px;
+      gap: 12px;
+      align-items: center;
+      width: calc(100% - 48px);
+      min-height: 58px;
+      margin: 6px 24px;
+      padding: 11px 14px;
+      border: 1px solid transparent;
+      border-radius: 18px;
+      background: var(--ink-800);
+      color: var(--paper);
+      text-align: left;
+      cursor: pointer;
+    }
+    .language-row.selected { border-color: var(--violet); background: rgba(169,148,237,.14); }
+    .flag {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--ink-700);
+      color: var(--paper-2);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .language-name strong { display: block; font-size: 13px; }
+    .language-name span { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; }
+    .row-end {
+      display: grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: var(--glass);
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .language-row.selected .row-end { background: var(--violet); color: var(--ink-900); }
+    .tap-hint {
+      position: absolute;
+      right: -5px;
+      bottom: -7px;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse { 50% { transform: scale(1.2); opacity: .45; } }
+    .language-bottom { flex: 0 0 auto; }
+    .language-confirm {
+      position: relative;
+      width: calc(100% - 48px);
+      min-height: 49px;
+      margin: 7px 24px 10px;
+      border: 0;
+      border-radius: 15px;
+      background: var(--paper);
+      color: var(--ink-900);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .language-confirm:disabled { opacity: .34; cursor: not-allowed; }
+    .language-confirm.loading { color: transparent; }
+    .language-confirm.loading::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 17px;
+      height: 17px;
+      margin: -10px;
+      border: 2px solid rgba(16,17,38,.22);
+      border-top-color: var(--ink-900);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .onboarding {
+      position: absolute;
+      z-index: 50;
+      inset: 0;
+      overflow: hidden;
+      touch-action: pan-y;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(169,148,237,.2), transparent 32%),
+        var(--ink-900);
+    }
+    .onboarding.hidden { display: none; }
+    .ob-page {
+      display: none;
+      height: 100%;
+      animation: ob-enter .38s var(--ease);
+    }
+    .ob-page.active { display: flex; }
+    .ob-page.content-page {
+      flex-direction: column;
+      padding-top: 48px;
+    }
+    @keyframes ob-enter {
+      from { opacity: 0; transform: translateX(18px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .ob-main {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px 8px;
+      text-align: center;
+    }
+    .ob-brand {
+      position: absolute;
+      top: 54px;
+      left: 24px;
+      font: 500 19px/1 "Newsreader", Georgia, serif;
+    }
+    .ob-art {
+      position: relative;
+      width: min(78%, 280px);
+      height: 225px;
+      margin: 14px auto 22px;
+    }
+    .ob-orbit {
+      position: absolute;
+      inset: 14px 24px;
+      border: 1px solid rgba(214,204,255,.22);
+      border-radius: 50%;
+      transform: rotate(-18deg);
+    }
+    .ob-orbit:nth-child(2) { inset: 42px 0; transform: rotate(27deg); }
+    .ob-card {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      width: 112px;
+      height: 174px;
+      border: 1px solid rgba(211,183,120,.65);
+      border-radius: 14px;
+      background: linear-gradient(145deg, #33365e, #18192f);
+      transform: translateX(-50%) rotate(5deg);
+      box-shadow: 0 18px 50px rgba(0,0,0,.38);
+    }
+    .ob-card::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(211,183,120,.28);
+      border-radius: 9px;
+    }
+    .ob-card .moon { position: absolute; top: 48px; left: 25px; transform: scale(.72); }
+    .ob-star {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--violet-2);
+      box-shadow: 198px 28px var(--gold), 26px 166px var(--paper), 222px 155px var(--violet);
+    }
+    .ob-main h2 {
+      max-width: 340px;
+      margin: 0;
+      font: 500 31px/1.06 "Newsreader", Georgia, serif;
+      letter-spacing: -.02em;
+    }
+    .ob-main > p {
+      max-width: 330px;
+      margin: 10px auto 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .ob-question { justify-content: flex-start; padding-top: 42px; }
+    .ob-question h2 { font-size: 28px; }
+    .ob-options {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 22px;
+    }
+    .ob-option {
+      min-height: 82px;
+      padding: 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 15px;
+      background: var(--glass);
+      color: var(--paper-2);
+      font-size: 11px;
+      line-height: 1.35;
+      cursor: pointer;
+      transition: .2s var(--ease);
+    }
+    .ob-option svg {
+      display: block;
+      width: 22px;
+      height: 22px;
+      margin: 0 auto 8px;
+      fill: none;
+      stroke: var(--violet-2);
+      stroke-width: 1.5;
+    }
+    .ob-option.selected {
+      border-color: var(--violet);
+      background: rgba(169,148,237,.16);
+      color: var(--paper);
+      box-shadow: inset 0 0 0 1px var(--violet);
+    }
+    .ob-date {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1.25fr 1.35fr;
+      gap: 8px;
+      margin: 24px 0 12px;
+    }
+    .ob-field {
+      padding: 11px 8px;
+      border: 1px solid var(--stroke);
+      border-radius: 13px;
+      background: var(--glass);
+      text-align: left;
+    }
+    .ob-field label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted-2);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .ob-field select {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--paper);
+      font-size: 11px;
+    }
+    .ob-privacy {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      width: 100%;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1.4;
+      text-align: left;
+    }
+    .ob-privacy svg { flex: 0 0 auto; width: 15px; height: 15px; fill: none; stroke: var(--sage); stroke-width: 1.8; }
+    .native-ad-slot {
+      height: 92px;
+      margin: 0 20px;
+      padding: 10px 12px;
+      border: 1px solid var(--stroke);
+      border-radius: 13px;
+      background: var(--glass);
+    }
+    .native-ad-label {
+      display: inline-block;
+      padding: 2px 5px;
+      border: 1px solid var(--stroke-strong);
+      border-radius: 4px;
+      color: var(--muted-2);
+      font-size: 7px;
+    }
+    .native-ad-body {
+      display: grid;
+      grid-template-columns: 38px 1fr 58px;
+      gap: 9px;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .ad-block { height: 7px; border-radius: 3px; background: var(--ink-700); }
+    .ad-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--ink-750); }
+    .ad-cta { height: 27px; border-radius: 8px; background: var(--ink-700); }
+    .ob-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 32px;
+      gap: 6px;
+    }
+    .ob-dot { width: 7px; height: 7px; border-radius: 99px; background: var(--ink-700); transition: .25s var(--ease); }
+    .ob-dot.active { width: 20px; background: var(--violet); }
+    .ob-next {
+      min-height: 50px;
+      margin: 0 32px;
+      border: 0;
+      border-radius: 15px;
+      background: var(--paper);
+      color: var(--ink-900);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .ob-next:disabled { opacity: .34; cursor: not-allowed; }
+    .ob-bottom-space { height: 16px; flex: 0 0 auto; }
+    .ob-full-ad {
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 58px 18px 22px;
+      background: #e9e8ec;
+      color: #222330;
+    }
+    .ob-full-ad .ad-topline { display: flex; justify-content: space-between; align-items: center; font-size: 9px; color: #686976; }
+    .ad-close {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 50%;
+      background: rgba(255,255,255,.72);
+      color: #222330;
+      cursor: pointer;
+    }
+    .full-ad-creative {
+      display: grid;
+      place-items: center;
+      min-height: 390px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 28%, rgba(169,148,237,.5), transparent 28%),
+        #d8d5e2;
+      text-align: center;
+    }
+    .full-ad-creative div { max-width: 230px; }
+    .full-ad-creative strong { display: block; font: 500 26px/1.05 "Newsreader", serif; }
+    .full-ad-creative span { display: block; margin-top: 8px; color: #6f6c78; font-size: 11px; line-height: 1.45; }
+    .full-ad-button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      background: #27283a;
+      color: white;
+      font-weight: 700;
+    }
+
+    .toast {
+      position: absolute;
+      z-index: 60;
+      right: 24px;
+      bottom: 102px;
+      left: 24px;
+      display: none;
+      padding: 12px 14px;
+      border: 1px solid var(--stroke);
+      border-radius: 13px;
+      background: var(--paper);
+      color: var(--ink-900);
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    }
+    .toast.show { display: block; animation: toast .28s var(--ease); }
+    @keyframes toast { from { transform: translateY(8px); opacity: 0; } }
+
+    @media (max-width: 1050px) {
+      .app-shell { grid-template-columns: minmax(390px, 460px) minmax(250px, 320px); }
+      .brief { display: none; }
+    }
+    @media (max-width: 760px) {
+      body { background: var(--ink-900); }
+      .app-shell { display: block; min-height: 100vh; padding: 0; }
+      .notes { display: none; }
+      .phone {
+        width: 100%;
+        height: 100vh;
+        min-height: 640px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .phone::before { display: none; }
+      .status { display: none; }
+      .view { padding-top: 24px; }
+      .chat-layout { padding-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3l8.5 7.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="i-cards" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="m12 8 2 4-2 4-2-4z"/><path d="M4 7.5 2.8 18a2 2 0 0 0 1.7 2.2l1.5.2M20 7.5 21.2 18a2 2 0 0 1-1.7 2.2l-1.5.2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 11.4a8.4 8.4 0 0 1-9 8.3 9.8 9.8 0 0 1-3.6-1.1L3 20l1.4-4.2A8.4 8.4 0 1 1 20.5 11.4Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H11a3 3 0 0 1 3 3v16a3 3 0 0 0-3-3H4z"/><path d="M20 4.5A2.5 2.5 0 0 0 17.5 2H14v19a3 3 0 0 1 3-3h3z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m21 3-8 18-2.5-7.5L3 11zM10.5 13.5 21 3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 5.7a5.5 5.5 0 0 0-7.8 0L12 6.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 22l8.8-8.5a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2c.7 5.4 4 8.7 9 10-5 1.3-8.3 4.6-9 10-.7-5.4-4-8.7-9-10 5-1.3 8.3-4.6 9-10Z"/></symbol>
+  </svg>
+
+  <main class="app-shell">
+    <aside class="brief">
+      <p class="eyebrow">AstroDaily · Redesign 01</p>
+      <h1>Một khoảng lặng có ý nghĩa, mỗi ngày.</h1>
+      <p class="lead">Trải nghiệm mới kết hợp Tarot, chiêm tinh và đối thoại cùng chuyên gia AI thành một hành trình tự phản chiếu rõ ràng, riêng tư và có trách nhiệm.</p>
+      <div class="principles">
+        <div class="principle"><span>01</span>Daily ritual thay cho menu tính năng</div>
+        <div class="principle"><span>02</span>Insight có thể hành động</div>
+        <div class="principle"><span>03</span>AI minh bạch, không giả danh con người</div>
+        <div class="principle"><span>04</span>Monetization sau value moment</div>
+      </div>
+      <div class="prototype-label">Interactive HTML prototype</div>
+    </aside>
+
+    <section class="phone" aria-label="AstroDaily mobile prototype">
+      <div class="status"><span>9:41</span><span class="status-icons"><i></i><i></i></span></div>
+      <div class="phone-screen">
+        <section class="pre-funnel" id="preFunnel" aria-label="AstroDaily first-run funnel">
+          <article class="funnel-stage splash-stage active" data-funnel-stage="splash">
+            <div class="splash-brand">
+              <div class="splash-mark" aria-hidden="true"></div>
+              <h1>AstroDaily</h1>
+              <p>Tarot · Astrology · Reflection</p>
+            </div>
+            <div class="splash-bottom">
+              <div class="splash-progress" aria-label="Đang chuẩn bị"></div>
+              <div class="native-ad-slot splash-ad waiting" aria-label="Native hoặc banner splash do BBL Funnel quản lý">
+                <span class="native-ad-label">AD</span><span class="placement-name">native_splash phủ trên banner_splash khi có fill</span>
+                <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="funnel-stage inter-stage" data-funnel-stage="splash-inter">
+            <div class="ad-topline"><span>Quảng cáo · inter_splash</span><button class="ad-close" id="closeSplashInter" aria-label="Đóng quảng cáo">×</button></div>
+            <div class="inter-creative"><div><strong>Splash interstitial</strong><span>Sau khi consent và AdsLoader sẵn sàng, BBL Funnel gọi interstitial. Đóng hoặc load fail đều tiếp tục sang Language.</span></div></div>
+            <button class="full-ad-button" data-toast="Minh hoạ CTA thuộc creative quảng cáo.">Ad call to action</button>
+          </article>
+
+          <article class="funnel-stage language-stage" data-funnel-stage="language">
+            <header class="language-title no-back"><h2>Chọn ngôn ngữ</h2></header>
+            <div class="native-ad-slot language-ad small" aria-label="Top native language">
+              <span class="native-ad-label">AD</span><span class="placement-name" id="languageTopPlacement">native_language_small</span>
+              <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+            </div>
+            <div class="language-list" id="languageList" aria-label="Danh sách ngôn ngữ"></div>
+            <div class="language-bottom">
+              <button class="language-confirm" id="languageConfirm" disabled>Xác nhận</button>
+              <div class="native-ad-slot language-ad full" aria-label="Bottom native language">
+                <span class="native-ad-label">AD</span><span class="placement-name" id="languageBottomPlacement">native_language_full</span>
+                <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="funnel-stage language-stage" data-funnel-stage="language-sub">
+            <header class="language-title">
+              <button class="icon-button" id="languageBack" aria-label="Quay lại chọn ngôn ngữ">‹</button>
+              <h2 id="languageSubTitle">English</h2><span></span>
+            </header>
+            <div class="native-ad-slot language-ad small" aria-label="Top native language sub">
+              <span class="native-ad-label">AD</span><span class="placement-name" id="languageSubTopPlacement">native_language_sub_small</span>
+              <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+            </div>
+            <div class="language-list" id="languageSubList" aria-label="Danh sách biến thể ngôn ngữ"></div>
+            <div class="language-bottom">
+              <button class="language-confirm" id="languageSubConfirm" disabled>Xác nhận</button>
+              <div class="native-ad-slot language-ad full" aria-label="Bottom native language sub">
+                <span class="native-ad-label">AD</span><span class="placement-name" id="languageSubBottomPlacement">native_language_sub_full</span>
+                <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:68%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="onboarding hidden" id="onboarding" aria-label="Onboarding AstroDaily" draggable="true">
+          <article class="ob-page content-page active" data-ob-page="0">
+            <div class="ob-brand">AstroDaily</div>
+            <div class="ob-main">
+              <div class="ob-art" aria-hidden="true">
+                <div class="ob-orbit"></div><div class="ob-orbit"></div><div class="ob-star"></div>
+                <div class="ob-card"><div class="moon"></div></div>
+              </div>
+              <p class="section-kicker">Một khoảng lặng dành cho bạn</p>
+              <h2>Hiểu mình rõ hơn, mỗi ngày một chút.</h2>
+              <p>Tarot, chiêm tinh và những cuộc trò chuyện có định hướng giúp bạn nhìn rõ cảm xúc và bước tiếp theo.</p>
+            </div>
+            <div class="native-ad-slot" aria-label="Vị trí quảng cáo native do BBL Funnel quản lý">
+              <span class="native-ad-label">AD</span>
+              <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+            </div>
+            <div class="ob-indicator" aria-label="Trang 1 trên 5"></div>
+            <button class="ob-next">Tiếp tục</button>
+            <div class="ob-bottom-space"></div>
+          </article>
+
+          <article class="ob-page ob-full-ad" data-ob-page="1">
+            <div class="ad-topline"><span>Nội dung được tài trợ</span><button class="ad-close" aria-label="Đóng quảng cáo">×</button></div>
+            <div class="full-ad-creative"><div><strong>Full native placement</strong><span>Trang này do BBL Funnel và Ads SDK render. Product UI không thay đổi bố cục hoặc chrome quảng cáo.</span></div></div>
+            <button class="full-ad-button" data-toast="Minh hoạ vị trí CTA của quảng cáo.">Ad call to action</button>
+          </article>
+
+          <article class="ob-page content-page" data-ob-page="2">
+            <div class="ob-main ob-question">
+              <p class="section-kicker">Cá nhân hoá trải nghiệm</p>
+              <h2>Điều gì đưa bạn đến AstroDaily?</h2>
+              <p>Câu trả lời sẽ ưu tiên reading và chuyên gia phù hợp. Bạn có thể thay đổi bất kỳ lúc nào.</p>
+              <div class="ob-options" role="radiogroup" aria-label="Mục tiêu sử dụng">
+                <button class="ob-option" role="radio" aria-checked="false" data-goal="clarity"><svg><use href="#i-spark"/></svg>Làm rõ một tình huống</button>
+                <button class="ob-option" role="radio" aria-checked="false" data-goal="love"><svg><use href="#i-heart"/></svg>Tình yêu &amp; mối quan hệ</button>
+                <button class="ob-option" role="radio" aria-checked="false" data-goal="career"><svg><use href="#i-compass"/></svg>Sự nghiệp &amp; hướng đi</button>
+                <button class="ob-option" role="radio" aria-checked="false" data-goal="self"><svg><use href="#i-user"/></svg>Hiểu bản thân sâu hơn</button>
+              </div>
+            </div>
+            <div class="native-ad-slot" aria-label="Vị trí quảng cáo native do BBL Funnel quản lý">
+              <span class="native-ad-label">AD</span>
+              <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+            </div>
+            <div class="ob-indicator" aria-label="Trang 3 trên 5"></div>
+            <button class="ob-next" disabled>Tiếp tục</button>
+            <div class="ob-bottom-space"></div>
+          </article>
+
+          <article class="ob-page ob-full-ad" data-ob-page="3">
+            <div class="ad-topline"><span>Nội dung được tài trợ</span><button class="ad-close" aria-label="Đóng quảng cáo">×</button></div>
+            <div class="full-ad-creative"><div><strong>Full native placement</strong><span>Page indicator, Next button và inline content được ẩn đúng theo contract của BBL Funnel.</span></div></div>
+            <button class="full-ad-button" data-toast="Minh hoạ vị trí CTA của quảng cáo.">Ad call to action</button>
+          </article>
+
+          <article class="ob-page content-page" data-ob-page="4">
+            <div class="ob-main ob-question">
+              <p class="section-kicker">Bầu trời của riêng bạn</p>
+              <h2>Ngày sinh của bạn là khi nào?</h2>
+              <p>Thông tin này giúp xác định cung Mặt Trời và cá nhân hoá horoscope. Không cần giờ sinh ở bước này.</p>
+              <div class="ob-date">
+                <div class="ob-field"><label for="birthDay">Ngày</label><select id="birthDay"><option value="">Chọn</option></select></div>
+                <div class="ob-field"><label for="birthMonth">Tháng</label><select id="birthMonth"><option value="">Chọn</option></select></div>
+                <div class="ob-field"><label for="birthYear">Năm</label><select id="birthYear"><option value="">Chọn</option></select></div>
+              </div>
+              <div class="ob-privacy"><svg><use href="#i-check"/></svg><span>Được lưu trên thiết bị để cá nhân hoá. Bạn có thể sửa hoặc xoá trong Hồ sơ.</span></div>
+              <button class="text-button" style="margin-top:18px" data-skip-birth>Để sau</button>
+            </div>
+            <div class="native-ad-slot" aria-label="Vị trí quảng cáo native do BBL Funnel quản lý">
+              <span class="native-ad-label">AD</span>
+              <div class="native-ad-body"><div class="ad-icon"></div><div><div class="ad-block"></div><div class="ad-block" style="width:72%;margin-top:6px"></div></div><div class="ad-cta"></div></div>
+            </div>
+            <div class="ob-indicator" aria-label="Trang 5 trên 5"></div>
+            <button class="ob-next" disabled>Bắt đầu hành trình</button>
+            <div class="ob-bottom-space"></div>
+          </article>
+        </section>
+
+        <section class="view active" data-view="today">
+          <header class="topbar">
+            <div class="brand">AstroDaily</div>
+            <button class="icon-button" aria-label="Thông báo" data-toast="Bạn chưa có lời nhắc mới.">
+              <svg><use href="#i-bell"/></svg>
+            </button>
+          </header>
+
+          <p class="section-kicker">Thứ Tư, 23 tháng 9</p>
+          <h2 class="display">Chào buổi tối.</h2>
+          <p class="subcopy">Dành một phút để trở về với điều đang thực sự quan trọng.</p>
+
+          <article class="daily-hero">
+            <div class="hero-meta"><span>Lá bài hôm nay</span><span>Chưa mở</span></div>
+            <div class="tarot-card" aria-hidden="true">
+              <div class="inner"><div class="star-field"></div><div class="moon"></div></div>
+            </div>
+            <button class="hero-action" data-toast="Prototype: bắt đầu nghi thức reveal lá bài theo ngày.">
+              <span>Mở thông điệp hôm nay</span><svg><use href="#i-arrow"/></svg>
+            </button>
+          </article>
+
+          <div class="section-head"><h2>Bầu trời của bạn</h2><button class="text-button" data-toast="Mở chi tiết horoscope theo ngày, tuần, tháng.">Xem chi tiết</button></div>
+          <article class="insight-card">
+            <div class="zodiac-mark" id="homeZodiacSymbol">✦</div>
+            <div><h3 id="homeZodiacName">Horoscope của bạn · Hôm nay</h3><p>Một cuộc trò chuyện chân thành có thể làm rõ điều bạn đang phân vân.</p></div>
+            <div class="score">4.2</div>
+          </article>
+
+          <article class="reflection">
+            <small>Reflection prompt</small>
+            <p>Điều gì đang cần được nhìn nhận thành thật hơn?</p>
+            <button data-view-target="journal">Viết vài dòng trong Journal</button>
+          </article>
+
+          <div class="section-head"><h2>Trò chuyện sâu hơn</h2><button class="text-button" data-view-target="experts">Tất cả</button></div>
+          <article class="chat-promo">
+            <p class="section-kicker">Chuyên gia AI đồng hành</p>
+            <h3>Gỡ rối một lựa chọn cùng An Nhiên</h3>
+            <p>Không phán quyết thay bạn. Chỉ giúp nhìn rõ điều đang diễn ra.</p>
+            <button class="mini-cta" data-expert="an_nhien_tarot_clarity">Xem hồ sơ</button>
+            <div class="orbit-art" aria-hidden="true"><div class="body"></div><div class="head"></div><div class="hair"></div></div>
+          </article>
+        </section>
+
+        <section class="view" data-view="readings">
+          <header class="topbar"><div class="brand">Readings</div><button class="icon-button" aria-label="Lịch sử"><svg><use href="#i-book"/></svg></button></header>
+          <p class="section-kicker">Chọn điều bạn muốn làm rõ</p>
+          <h2 class="display">Một câu hỏi tốt bắt đầu từ chính bạn.</h2>
+          <p class="subcopy">Mỗi trải bài được thiết kế cho một loại quyết định khác nhau.</p>
+          <div class="filter-row">
+            <button class="filter active">Tất cả</button><button class="filter">Hôm nay</button><button class="filter">Tình yêu</button><button class="filter">Sự nghiệp</button>
+          </div>
+          <div class="reading-list">
+            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Daily Card — một kết quả duy nhất trong ngày.">
+              <div class="reading-symbol"><svg><use href="#i-sun"/></svg></div>
+              <div><h3>Thông điệp hôm nay</h3><p>Một lá bài giúp bạn đặt tâm điểm cho ngày mới.</p><span class="reading-tag">1 lá · 2 phút</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Love Reflection.">
+              <div class="reading-symbol"><svg><use href="#i-heart"/></svg></div>
+              <div><h3>Tình yêu &amp; mối quan hệ</h3><p>Khám phá nhu cầu, ranh giới và cách giao tiếp.</p><span class="reading-tag">3 lá · 5 phút</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Decision Compass.">
+              <div class="reading-symbol"><svg><use href="#i-compass"/></svg></div>
+              <div><h3>La bàn quyết định</h3><p>Nhìn rõ lựa chọn, trade-off và bước thử nghiệm tiếp theo.</p><span class="reading-tag">3 lá · 6 phút</span></div><span class="chevron">›</span>
+            </article>
+            <article class="reading-card" role="button" tabindex="0" data-toast="Prototype: mở Open Reflection thay cho Yes/No tuyệt đối.">
+              <div class="reading-symbol"><svg><use href="#i-spark"/></svg></div>
+              <div><h3>Một câu hỏi đang bỏ ngỏ</h3><p>Điều gì đang ủng hộ, cản trở và nằm trong quyền chủ động?</p><span class="reading-tag">1 lá · 3 phút</span></div><span class="chevron">›</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view="experts">
+          <header class="topbar"><div class="brand">Chuyên gia</div><button class="icon-button" aria-label="Thông tin về AI" data-toast="Các chuyên gia là AI companion, không phải người thật."><svg><use href="#i-spark"/></svg></button></header>
+          <p class="section-kicker">Chọn người đồng hành phù hợp</p>
+          <h2 class="display">Mỗi cuộc trò chuyện, một phạm vi rõ ràng.</h2>
+          <p class="subcopy">Bạn luôn giữ quyền quyết định. Chuyên gia giúp phản chiếu, không tiên tri tương lai.</p>
+          <div class="filter-row">
+            <button class="filter active" data-expert-filter="all">Tất cả</button>
+            <button class="filter" data-expert-filter="tarot">Tarot</button>
+            <button class="filter" data-expert-filter="astrology">Chiêm tinh</button>
+            <button class="filter" data-expert-filter="journal">Journaling</button>
+          </div>
+          <div class="trust-note">Các hồ sơ dưới đây là chuyên gia AI. Nội dung mang tính tự phản chiếu, không thay thế tư vấn y tế, pháp lý, tâm lý hoặc tài chính.</div>
+          <div class="expert-list" id="expertList"></div>
+        </section>
+
+        <section class="view" data-view="journal">
+          <header class="topbar"><div class="brand">Journal</div><button class="icon-button" aria-label="Thêm ghi chú" data-toast="Prototype: tạo reflection mới."><svg><use href="#i-spark"/></svg></button></header>
+          <p class="section-kicker">Riêng tư · Chỉ bạn nhìn thấy</p>
+          <h2 class="display">Nhìn lại những điều đang dần trở nên rõ ràng.</h2>
+          <div class="journal-calendar" style="margin-top:20px">
+            <div class="calendar-head"><strong>Tháng 9, 2026</strong><span class="score">6 reflections</span></div>
+            <div class="days">
+              <span class="day-name">T2</span><span class="day-name">T3</span><span class="day-name">T4</span><span class="day-name">T5</span><span class="day-name">T6</span><span class="day-name">T7</span><span class="day-name">CN</span>
+              <span class="day"></span><span class="day">1</span><span class="day">2</span><span class="day has-entry">3</span><span class="day">4</span><span class="day">5</span><span class="day has-entry">6</span>
+              <span class="day">7</span><span class="day">8</span><span class="day has-entry">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span>
+              <span class="day">14</span><span class="day has-entry">15</span><span class="day">16</span><span class="day">17</span><span class="day has-entry">18</span><span class="day">19</span><span class="day">20</span>
+              <span class="day">21</span><span class="day">22</span><span class="day today">23</span><span class="day">24</span><span class="day">25</span><span class="day">26</span><span class="day">27</span>
+            </div>
+          </div>
+          <div class="section-head"><h2>Gần đây</h2><button class="text-button">Lọc</button></div>
+          <div class="journal-entry"><div class="entry-card"></div><div><time>18 tháng 9 · Tình yêu</time><h3>Queen of Cups</h3><p>Mình nhận ra lắng nghe không có nghĩa là bỏ qua ranh giới của bản thân.</p></div></div>
+          <div class="journal-entry"><div class="entry-card"></div><div><time>15 tháng 9 · Sự nghiệp</time><h3>Two of Wands</h3><p>Thử nghiệm nhỏ tuần này: nói chuyện với một người đang làm công việc mình quan tâm.</p></div></div>
+        </section>
+
+        <section class="view" data-view="profile">
+          <header class="topbar"><div class="brand">Hồ sơ</div><button class="icon-button" aria-label="Cài đặt" data-toast="Prototype: mở cài đặt."><svg><use href="#i-user"/></svg></button></header>
+          <p class="section-kicker">Không gian của bạn</p>
+          <h2 class="display" id="profileIdentity">Hồ sơ của bạn</h2>
+          <p class="subcopy" id="profileBirth">Ngày sinh chưa được cung cấp</p>
+          <article class="scope-box" style="margin-top:22px">
+            <h3>Cá nhân hoá có kiểm soát</h3>
+            <div class="scope-list">
+              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Daily card được lưu cố định theo ngày.</span></div>
+              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Dữ liệu ngày sinh chỉ dùng để tạo chart khi bạn chủ động cung cấp.</span></div>
+              <div class="scope-row"><svg><use href="#i-check"/></svg><span>Journal mặc định riêng tư và có thể xoá bất kỳ lúc nào.</span></div>
+            </div>
+          </article>
+          <div class="section-head"><h2>Nhịp hằng ngày</h2></div>
+          <article class="insight-card"><div class="zodiac-mark">21</div><div><h3>Nhắc tôi lúc 21:00</h3><p>Một lời nhắc nhẹ, không tạo áp lực giữ streak.</p></div><span class="score">Bật</span></article>
+          <button class="text-button" style="margin-top:20px" data-replay-funnel>Xem lại toàn bộ first-run funnel</button>
+        </section>
+
+        <nav class="bottom-nav" aria-label="Điều hướng chính">
+          <button class="nav-item active" data-view-target="today"><svg><use href="#i-home"/></svg><span>Hôm nay</span></button>
+          <button class="nav-item" data-view-target="readings"><svg><use href="#i-cards"/></svg><span>Trải bài</span></button>
+          <button class="nav-item" data-view-target="experts"><svg><use href="#i-chat"/></svg><span>Chuyên gia</span></button>
+          <button class="nav-item" data-view-target="journal"><svg><use href="#i-book"/></svg><span>Journal</span></button>
+          <button class="nav-item" data-view-target="profile"><svg><use href="#i-user"/></svg><span>Hồ sơ</span></button>
+        </nav>
+
+        <section class="expert-detail" id="expertDetail" aria-label="Hồ sơ chuyên gia">
+          <div class="detail-scroll">
+            <div class="detail-top">
+              <button class="icon-button" id="closeDetail" aria-label="Quay lại">‹</button>
+              <span class="ai-badge">AI COMPANION</span>
+              <button class="icon-button" aria-label="Lưu chuyên gia" data-toast="Đã lưu chuyên gia."><svg><use href="#i-heart"/></svg></button>
+            </div>
+            <div class="detail-identity">
+              <div class="avatar" id="detailAvatar"><span>AN</span></div>
+              <h2 id="detailName">An Nhiên</h2>
+              <span id="detailTitle" class="section-kicker">Tarot cho sự sáng rõ</span>
+              <p id="detailDescription">Gỡ rối một tình huống và tìm bước đi tiếp theo mà không quyết định thay bạn.</p>
+            </div>
+            <article class="scope-box">
+              <h3>Cách chuyên gia có thể hỗ trợ</h3>
+              <div class="scope-list" id="detailCapabilities"></div>
+            </article>
+            <article class="scope-box">
+              <h3>Cam kết cuộc trò chuyện</h3>
+              <div class="scope-list">
+                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Phân biệt dữ kiện, biểu tượng và giả thuyết diễn giải.</span></div>
+                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Không quyết định thay bạn hoặc khẳng định tương lai chắc chắn.</span></div>
+                <div class="scope-row"><svg><use href="#i-check"/></svg><span>Mỗi lượt chỉ hỏi tối đa một câu hỏi chính.</span></div>
+              </div>
+            </article>
+          </div>
+          <div class="sticky-cta"><button class="primary" id="startChat">Bắt đầu cuộc trò chuyện</button></div>
+        </section>
+
+        <section class="chat-view" id="chatView" aria-label="Trò chuyện với chuyên gia">
+          <div class="chat-layout">
+            <header class="chat-header">
+              <button class="icon-button" id="closeChat" aria-label="Quay lại">‹</button>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="avatar" id="chatAvatar"><span>AN</span></div>
+                <div class="chat-title"><strong id="chatName">An Nhiên</strong><span>Chuyên gia AI · Sẵn sàng</span></div>
+              </div>
+              <button class="icon-button" aria-label="Tuỳ chọn" data-toast="Cuộc trò chuyện được lưu trong Journal khi bạn đồng ý.">···</button>
+            </header>
+            <div class="chat-messages" id="chatMessages">
+              <div class="message guide" id="greeting">Mình sẽ cùng bạn nhìn rõ điều đang diễn ra. Bạn muốn hiểu tình huống hiện tại hay tìm hướng hành động?</div>
+              <div class="chat-label">Bạn có thể bắt đầu với</div>
+              <div class="suggestions">
+                <button class="suggestion">Mình đang phân vân giữa hai lựa chọn</button>
+                <button class="suggestion">Mình muốn hiểu cảm xúc hiện tại</button>
+              </div>
+            </div>
+            <form class="composer" id="chatForm">
+              <input id="chatInput" aria-label="Tin nhắn" placeholder="Chia sẻ điều bạn đang nghĩ..." autocomplete="off" />
+              <button class="send" aria-label="Gửi"><svg><use href="#i-send"/></svg></button>
+            </form>
+          </div>
+        </section>
+        <div class="toast" id="toast" role="status"></div>
+      </div>
+    </section>
+
+    <aside class="notes">
+      <p class="eyebrow">Design rationale</p>
+      <h2>Calm, credible, personal.</h2>
+      <div class="note-list">
+        <div class="note"><strong>Today-first architecture</strong><p>Một hành động chính mỗi ngày giúp giảm decision fatigue và tạo thói quen tự nhiên.</p></div>
+        <div class="note"><strong>Expert matching</strong><p>7 chuyên gia giữ phạm vi chuyên môn riêng; profile giải thích rõ khả năng trước khi vào chat.</p></div>
+        <div class="note"><strong>Responsible AI</strong><p>Badge AI luôn hiển thị. Copy tránh tiên tri tuyệt đối và không tạo phụ thuộc cảm xúc.</p></div>
+        <div class="note"><strong>Editorial mysticism</strong><p>Serif giàu cảm xúc kết hợp sans dễ đọc; màu huyền bí tiết chế, khoảng thở lớn.</p></div>
+        <div class="note"><strong>Revenue with trust</strong><p>Không đặt quảng cáo trước reading hoặc trong chat; premium xuất hiện sau value moment.</p></div>
+      </div>
+      <div class="token-row" aria-label="Bảng màu">
+        <span class="swatch" style="--swatch:#101126"></span><span class="swatch" style="--swatch:#a994ed"></span><span class="swatch" style="--swatch:#e89a8f"></span><span class="swatch" style="--swatch:#d3b778"></span><span class="swatch" style="--swatch:#f8f3eb"></span>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const languages = [
+      { code: "es", name: "Spanish", short: "ES", variants: ["Spain", "Mexico", "Argentina", "United States"] },
+      { code: "hi", name: "Hindi", short: "HI", variants: [] },
+      { code: "ru", name: "Russian", short: "RU", variants: ["Russia", "Belarus", "Kazakhstan"] },
+      { code: "en", name: "English", short: "EN", variants: ["United States", "United Kingdom", "Canada", "Australia", "India"] },
+      { code: "ar", name: "Arabic", short: "AR", variants: [] },
+      { code: "fr", name: "French", short: "FR", variants: [] },
+      { code: "pt", name: "Portuguese", short: "PT", variants: [] },
+      { code: "de", name: "German", short: "DE", variants: [] },
+      { code: "ja", name: "Japanese", short: "JA", variants: [] },
+      { code: "ko", name: "Korean", short: "KO", variants: [] },
+      { code: "vi", name: "Vietnamese", short: "VI", variants: [] },
+      { code: "zh", name: "Chinese", short: "ZH", variants: [] }
+    ];
+
+    const experts = [
+      {
+        id: "an_nhien_tarot_clarity", group: "tarot", initials: "AN", accent: "#8D72C3",
+        name: "An Nhiên", title: "Tarot cho sự sáng rõ",
+        description: "Gỡ rối một tình huống và tìm bước đi tiếp theo mà không quyết định thay bạn.",
+        tags: ["Quyết định", "Tự phản chiếu"],
+        greeting: "Mình sẽ cùng bạn nhìn rõ điều đang diễn ra. Bạn muốn hiểu tình huống hiện tại hay tìm hướng hành động?",
+        capabilities: ["Nhận diện nút thắt cốt lõi", "Làm rõ điều nằm trong quyền kiểm soát", "Đề xuất một hành động nhỏ trong 24 giờ"]
+      },
+      {
+        id: "lam_relationship_patterns", group: "tarot", initials: "L", accent: "#C46A82",
+        name: "Lam", title: "Tarot về tình yêu và mối quan hệ",
+        description: "Khám phá nhu cầu, ranh giới và cách giao tiếp trong các mối quan hệ.",
+        tags: ["Tình yêu", "Ranh giới"],
+        greeting: "Mình có thể giúp bạn nhìn rõ mô hình đang diễn ra giữa hai người. Điều bạn muốn hiểu nhất lúc này là cảm xúc của mình, cách giao tiếp hay quyết định về mối quan hệ?",
+        capabilities: ["Phân biệt dữ kiện và giả định", "Khám phá nhu cầu và ranh giới", "Chuẩn bị một cuộc trò chuyện lành mạnh"]
+      },
+      {
+        id: "gia_han_career_direction", group: "tarot", initials: "GH", accent: "#4D8A8B",
+        name: "Gia Hân", title: "Tarot về sự nghiệp và hướng đi",
+        description: "Làm rõ động lực, trở ngại và lựa chọn trong công việc hoặc hành trình phát triển nghề nghiệp.",
+        tags: ["Sự nghiệp", "Định hướng"],
+        greeting: "Mình sẽ giúp bạn nhìn rõ hướng đi nghề nghiệp, không hứa hẹn một kết quả cố định. Bạn đang cân nhắc lựa chọn nào?",
+        capabilities: ["Làm rõ giá trị nghề nghiệp", "So sánh trade-off thực tế", "Thiết kế một thử nghiệm nghề nghiệp nhỏ"]
+      },
+      {
+        id: "minh_khue_natal_identity", group: "astrology", initials: "MK", accent: "#526AAE",
+        name: "Minh Khuê", title: "Chiêm tinh bản đồ sao cá nhân",
+        description: "Khám phá nhu cầu, thế mạnh và những mâu thuẫn nội tâm qua bản đồ sao.",
+        tags: ["Bản đồ sao", "Hiểu bản thân"],
+        greeting: "Mình sẽ đọc bản đồ sao như một hệ thống xu hướng, không phải chiếc hộp định nghĩa con người bạn. Bạn muốn khám phá bản sắc, cảm xúc hay cách mình kết nối với người khác?",
+        capabilities: ["Tổng hợp các placement đã xác minh", "Khám phá nhu cầu bên dưới hành vi", "Nhìn cả biểu hiện cân bằng và mất cân bằng"]
+      },
+      {
+        id: "bao_nghi_transit_timing", group: "astrology", initials: "BN", accent: "#6B63A8",
+        name: "Bảo Nghi", title: "Chiêm tinh chu kỳ và thời điểm",
+        description: "Hiểu chủ đề của giai đoạn hiện tại và lựa chọn cách phản ứng chủ động.",
+        tags: ["Transit", "Chu kỳ"],
+        greeting: "Mình có thể giúp bạn hiểu một giai đoạn đang nhấn mạnh điều gì, nhưng không xem transit như lời tiên tri. Bạn muốn xem chủ đề nào và trong khoảng thời gian nào?",
+        capabilities: ["Nhận diện chủ đề của chu kỳ", "Nêu rõ khoảng thời gian và độ bất định", "Chuẩn bị cho cơ hội và áp lực"]
+      },
+      {
+        id: "thien_yen_synastry_dynamics", group: "astrology", initials: "TY", accent: "#B1627C",
+        name: "Thiên Yến", title: "Chiêm tinh tương hợp và động lực quan hệ",
+        description: "Tìm hiểu nhu cầu, điểm hòa hợp và vùng dễ xung đột giữa hai bản đồ sao.",
+        tags: ["Tương hợp", "Giao tiếp"],
+        greeting: "Mình sẽ giúp bạn hiểu động lực giữa hai người, không kết luận ai là định mệnh của ai. Bạn muốn tập trung vào giao tiếp hay nhu cầu tình cảm?",
+        capabilities: ["Phân tích nhu cầu của cả hai phía", "Nhận diện vùng dễ hiểu lầm", "Đề xuất một cách giao tiếp thực tế"]
+      },
+      {
+        id: "moc_shadow_journaling", group: "journal", initials: "M", accent: "#66765B",
+        name: "Mộc", title: "Tarot cho journaling và khám phá nội tâm",
+        description: "Dùng biểu tượng Tarot để nhận diện cảm xúc và những mô hình đang lặp lại.",
+        tags: ["Journaling", "Nội tâm"],
+        greeting: "Mình sẽ đi cùng bạn từng bước, không ép bạn đào sâu hơn mức bạn thấy an toàn. Có cảm xúc hay mô hình nào bạn muốn hiểu rõ hơn không?",
+        capabilities: ["Quan sát một cảm xúc mỗi lượt", "Gợi ý tối đa ba journal prompts", "Grounding nhẹ và quyền dừng bất kỳ lúc nào"]
+      }
+    ];
+
+    let selectedExpert = experts[0];
+    let toastTimer;
+    let splashTimer;
+    let adsReadyTimer;
+    let languageLockTimer;
+    let selectedLanguage = null;
+    let selectedVariant = null;
+    let onboardingPage = 0;
+    let onboardingGoal = "";
+    let swipeStartX = null;
+
+    const preFunnel = document.getElementById("preFunnel");
+    const expertList = document.getElementById("expertList");
+    const detail = document.getElementById("expertDetail");
+    const chat = document.getElementById("chatView");
+    const toast = document.getElementById("toast");
+    const onboarding = document.getElementById("onboarding");
+    const birthDay = document.getElementById("birthDay");
+    const birthMonth = document.getElementById("birthMonth");
+    const birthYear = document.getElementById("birthYear");
+
+    function showFunnelStage(stage) {
+      document.querySelectorAll(".funnel-stage").forEach(item => {
+        item.classList.toggle("active", item.dataset.funnelStage === stage);
+      });
+    }
+
+    function startFirstRunFunnel() {
+      clearTimeout(splashTimer);
+      clearTimeout(adsReadyTimer);
+      selectedLanguage = null;
+      selectedVariant = null;
+      resetOnboardingState();
+      preFunnel.classList.remove("hidden");
+      onboarding.classList.add("hidden");
+      renderLanguageRows();
+      showFunnelStage("splash");
+      document.querySelector(".splash-ad").classList.add("waiting");
+      adsReadyTimer = setTimeout(() => document.querySelector(".splash-ad").classList.remove("waiting"), 650);
+      splashTimer = setTimeout(() => showFunnelStage("splash-inter"), 1800);
+    }
+
+    function enterLanguage() {
+      clearTimeout(splashTimer);
+      showFunnelStage("language");
+    }
+
+    function enterOnboarding() {
+      preFunnel.classList.add("hidden");
+      onboarding.classList.remove("hidden");
+      showOnboardingPage(0);
+    }
+
+    function languageRowMarkup(item, selected, opensL2, showHint = false) {
+      return `
+        <button class="language-row ${selected ? "selected" : ""}" data-language-code="${item.code}" aria-pressed="${selected}">
+          <span class="flag">${item.short}</span>
+          <span class="language-name"><strong>${item.name}</strong><span>${opensL2 ? `${item.variants.length} regional variants` : "Chọn ngôn ngữ này"}</span></span>
+          <span class="row-end">${selected ? "✓" : opensL2 ? "›" : ""}</span>
+          ${showHint ? '<span class="tap-hint" aria-hidden="true"></span>' : ""}
+        </button>`;
+    }
+
+    function renderLanguageRows() {
+      document.getElementById("languageList").innerHTML = languages.map((item, index) =>
+        languageRowMarkup(item, selectedLanguage?.code === item.code, item.variants.length > 0, index === 0 && !selectedLanguage)
+      ).join("");
+      const confirm = document.getElementById("languageConfirm");
+      confirm.disabled = !selectedLanguage;
+    }
+
+    function lockLanguageConfirm(button) {
+      clearTimeout(languageLockTimer);
+      button.disabled = true;
+      button.classList.add("loading");
+      languageLockTimer = setTimeout(() => {
+        button.classList.remove("loading");
+        button.disabled = false;
+      }, 1000);
+    }
+
+    function chooseLanguage(code) {
+      selectedLanguage = languages.find(item => item.code === code) || null;
+      document.getElementById("languageTopPlacement").textContent = "native_language_small_click";
+      document.getElementById("languageBottomPlacement").textContent = "native_language_click";
+      renderLanguageRows();
+      lockLanguageConfirm(document.getElementById("languageConfirm"));
+    }
+
+    function openLanguageSub() {
+      selectedVariant = null;
+      document.getElementById("languageSubTitle").textContent = selectedLanguage.name;
+      document.getElementById("languageSubList").innerHTML = selectedLanguage.variants.map((name, index) => `
+        <button class="language-row" data-variant-index="${index}" aria-pressed="false">
+          <span class="flag">${selectedLanguage.short}</span>
+          <span class="language-name"><strong>${name}</strong><span>${selectedLanguage.name}</span></span>
+          <span class="row-end"></span>
+          ${index === 0 ? '<span class="tap-hint" aria-hidden="true"></span>' : ""}
+        </button>`).join("");
+      document.getElementById("languageSubConfirm").disabled = true;
+      document.getElementById("languageSubTopPlacement").textContent = "native_language_sub_small";
+      document.getElementById("languageSubBottomPlacement").textContent = "native_language_sub_full";
+      showFunnelStage("language-sub");
+    }
+
+    function chooseLanguageVariant(index) {
+      selectedVariant = selectedLanguage.variants[index];
+      document.querySelectorAll("[data-variant-index]").forEach(row => {
+        const selected = Number(row.dataset.variantIndex) === index;
+        row.classList.toggle("selected", selected);
+        row.setAttribute("aria-pressed", String(selected));
+        row.querySelector(".row-end").textContent = selected ? "✓" : "";
+        row.querySelector(".tap-hint")?.remove();
+      });
+      document.getElementById("languageSubTopPlacement").textContent = "native_language_sub_small_click";
+      document.getElementById("languageSubBottomPlacement").textContent = "native_language_sub_click";
+      lockLanguageConfirm(document.getElementById("languageSubConfirm"));
+    }
+
+    const zodiacSigns = [
+      { name: "Ma Kết", symbol: "♑", from: 1222, to: 1231 },
+      { name: "Ma Kết", symbol: "♑", from: 101, to: 119 },
+      { name: "Bảo Bình", symbol: "♒", from: 120, to: 218 },
+      { name: "Song Ngư", symbol: "♓", from: 219, to: 320 },
+      { name: "Bạch Dương", symbol: "♈", from: 321, to: 419 },
+      { name: "Kim Ngưu", symbol: "♉", from: 420, to: 520 },
+      { name: "Song Tử", symbol: "♊", from: 521, to: 620 },
+      { name: "Cự Giải", symbol: "♋", from: 621, to: 722 },
+      { name: "Sư Tử", symbol: "♌", from: 723, to: 822 },
+      { name: "Xử Nữ", symbol: "♍", from: 823, to: 922 },
+      { name: "Thiên Bình", symbol: "♎", from: 923, to: 1022 },
+      { name: "Bọ Cạp", symbol: "♏", from: 1023, to: 1121 },
+      { name: "Nhân Mã", symbol: "♐", from: 1122, to: 1221 }
+    ];
+
+    function appendOptions(select, values, format = value => value) {
+      values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = String(value);
+        option.textContent = format(value);
+        select.appendChild(option);
+      });
+    }
+
+    function updateDayOptions() {
+      const previous = Number(birthDay.value);
+      const month = Number(birthMonth.value);
+      const year = Number(birthYear.value) || 2000;
+      const maxDay = month ? new Date(year, month, 0).getDate() : 31;
+      birthDay.innerHTML = '<option value="">Chọn</option>';
+      appendOptions(birthDay, Array.from({ length: maxDay }, (_, index) => index + 1), value => String(value).padStart(2, "0"));
+      if (previous && previous <= maxDay) birthDay.value = String(previous);
+      updateBirthGate();
+    }
+
+    function updateBirthGate() {
+      const ready = Boolean(birthDay.value && birthMonth.value && birthYear.value);
+      document.querySelector('.ob-page[data-ob-page="4"] .ob-next').disabled = !ready;
+    }
+
+    function zodiacFor(day, month) {
+      const key = month * 100 + day;
+      return zodiacSigns.find(sign => key >= sign.from && key <= sign.to);
+    }
+
+    function applyBirthProfile() {
+      if (!birthDay.value || !birthMonth.value || !birthYear.value) return;
+      const sign = zodiacFor(Number(birthDay.value), Number(birthMonth.value));
+      if (!sign) return;
+      document.getElementById("homeZodiacSymbol").textContent = sign.symbol;
+      document.getElementById("homeZodiacName").textContent = `${sign.name} · Hôm nay`;
+      document.getElementById("profileIdentity").textContent = sign.name;
+      document.getElementById("profileBirth").textContent =
+        `Sinh ${Number(birthDay.value)} tháng ${Number(birthMonth.value)} · Giờ sinh chưa được cung cấp`;
+    }
+
+    function renderOnboardingDots() {
+      document.querySelectorAll(".ob-indicator").forEach((indicator) => {
+        const page = Number(indicator.closest(".ob-page").dataset.obPage);
+        indicator.innerHTML = Array.from({ length: 5 }, (_, index) =>
+          `<span class="ob-dot ${index === page ? "active" : ""}" aria-hidden="true"></span>`
+        ).join("");
+      });
+    }
+
+    function showOnboardingPage(page) {
+      onboardingPage = Math.max(0, Math.min(4, page));
+      document.querySelectorAll(".ob-page").forEach(item => {
+        item.classList.toggle("active", Number(item.dataset.obPage) === onboardingPage);
+      });
+    }
+
+    function completeOnboarding() {
+      applyBirthProfile();
+      onboarding.classList.add("hidden");
+      showView("today");
+      showToast(onboardingGoal ? "Đã cá nhân hoá trải nghiệm ban đầu." : "Bạn có thể cá nhân hoá sau trong Hồ sơ.");
+    }
+
+    function resetOnboardingState() {
+      onboardingGoal = "";
+      document.querySelectorAll(".ob-option").forEach(option => {
+        option.classList.remove("selected");
+        option.setAttribute("aria-checked", "false");
+      });
+      document.querySelector('.ob-page[data-ob-page="2"] .ob-next').disabled = true;
+      birthDay.value = "";
+      birthMonth.value = "";
+      birthYear.value = "";
+      updateDayOptions();
+      showOnboardingPage(0);
+    }
+
+    function renderExperts(filter = "all") {
+      expertList.innerHTML = "";
+      experts.filter(e => filter === "all" || e.group === filter).forEach(expert => {
+        const card = document.createElement("article");
+        card.className = "expert-card";
+        card.dataset.expert = expert.id;
+        card.setAttribute("role", "button");
+        card.tabIndex = 0;
+        card.setAttribute("aria-label", `Xem hồ sơ ${expert.name}, ${expert.title}`);
+        card.innerHTML = `
+          <div class="avatar" style="--accent:${expert.accent}"><span>${expert.initials}</span></div>
+          <div>
+            <div class="expert-name-row"><h3>${expert.name}</h3><span class="ai-badge">AI</span></div>
+            <p><strong style="color:var(--paper-2);font-weight:500">${expert.title}</strong><br>${expert.description}</p>
+            <div class="tags">${expert.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+          </div>
+          <span class="availability" aria-label="Sẵn sàng"></span>`;
+        expertList.appendChild(card);
+      });
+    }
+
+    function showView(name) {
+      document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.dataset.view === name));
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.viewTarget === name));
+      document.querySelector(`.view[data-view="${name}"]`)?.scrollTo(0, 0);
+    }
+
+    function openExpert(id) {
+      selectedExpert = experts.find(e => e.id === id) || experts[0];
+      document.getElementById("detailAvatar").style.setProperty("--accent", selectedExpert.accent);
+      document.getElementById("detailAvatar").innerHTML = `<span>${selectedExpert.initials}</span>`;
+      document.getElementById("detailName").textContent = selectedExpert.name;
+      document.getElementById("detailTitle").textContent = selectedExpert.title;
+      document.getElementById("detailDescription").textContent = selectedExpert.description;
+      document.getElementById("detailCapabilities").innerHTML = selectedExpert.capabilities
+        .map(item => `<div class="scope-row"><svg><use href="#i-check"/></svg><span>${item}</span></div>`).join("");
+      detail.classList.add("active");
+    }
+
+    function openChat() {
+      document.getElementById("chatAvatar").style.setProperty("--accent", selectedExpert.accent);
+      document.getElementById("chatAvatar").innerHTML = `<span>${selectedExpert.initials}</span>`;
+      document.getElementById("chatName").textContent = selectedExpert.name;
+      document.getElementById("greeting").textContent = selectedExpert.greeting;
+      document.querySelectorAll("#chatMessages .message:not(#greeting)").forEach(m => m.remove());
+      chat.classList.add("active");
+    }
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add("show");
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2300);
+    }
+
+    document.addEventListener("click", event => {
+      if (event.target.closest("#closeSplashInter")) {
+        enterLanguage();
+        return;
+      }
+
+      const languageRow = event.target.closest("[data-language-code]");
+      if (languageRow) {
+        chooseLanguage(languageRow.dataset.languageCode);
+        return;
+      }
+
+      const variantRow = event.target.closest("[data-variant-index]");
+      if (variantRow) {
+        chooseLanguageVariant(Number(variantRow.dataset.variantIndex));
+        return;
+      }
+
+      const obNext = event.target.closest(".ob-next");
+      if (obNext) {
+        if (onboardingPage === 4) completeOnboarding();
+        else showOnboardingPage(onboardingPage + 1);
+        return;
+      }
+
+      const adClose = event.target.closest(".ad-close");
+      if (adClose) {
+        showOnboardingPage(onboardingPage + 1);
+        return;
+      }
+
+      const goal = event.target.closest("[data-goal]");
+      if (goal) {
+        onboardingGoal = goal.dataset.goal;
+        document.querySelectorAll("[data-goal]").forEach(option => {
+          const selected = option === goal;
+          option.classList.toggle("selected", selected);
+          option.setAttribute("aria-checked", String(selected));
+        });
+        document.querySelector('.ob-page[data-ob-page="2"] .ob-next').disabled = false;
+        return;
+      }
+
+      if (event.target.closest("[data-skip-birth]")) {
+        completeOnboarding();
+        return;
+      }
+
+      if (event.target.closest("[data-replay-funnel]")) {
+        startFirstRunFunnel();
+        return;
+      }
+
+      const viewTarget = event.target.closest("[data-view-target]");
+      if (viewTarget) showView(viewTarget.dataset.viewTarget);
+
+      const expertTarget = event.target.closest("[data-expert]");
+      if (expertTarget) openExpert(expertTarget.dataset.expert);
+
+      const toastTarget = event.target.closest("[data-toast]");
+      if (toastTarget) showToast(toastTarget.dataset.toast);
+
+      const filterTarget = event.target.closest("[data-expert-filter]");
+      if (filterTarget) {
+        document.querySelectorAll("[data-expert-filter]").forEach(f => f.classList.remove("active"));
+        filterTarget.classList.add("active");
+        renderExperts(filterTarget.dataset.expertFilter);
+      }
+
+      const genericFilter = event.target.closest(".filter:not([data-expert-filter])");
+      if (genericFilter) {
+        genericFilter.parentElement.querySelectorAll(".filter").forEach(f => f.classList.remove("active"));
+        genericFilter.classList.add("active");
+      }
+
+      const expertCard = event.target.closest(".expert-card");
+      if (expertCard) openExpert(expertCard.dataset.expert);
+
+      const suggestion = event.target.closest(".suggestion");
+      if (suggestion) {
+        document.getElementById("chatInput").value = suggestion.textContent.trim();
+        document.getElementById("chatInput").focus();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      const target = event.target.closest('[role="button"]');
+      if (!target || (event.key !== "Enter" && event.key !== " ")) return;
+      event.preventDefault();
+      target.click();
+    });
+
+    document.getElementById("closeDetail").addEventListener("click", () => detail.classList.remove("active"));
+    document.getElementById("startChat").addEventListener("click", openChat);
+    document.getElementById("closeChat").addEventListener("click", () => chat.classList.remove("active"));
+    document.getElementById("languageConfirm").addEventListener("click", () => {
+      if (!selectedLanguage) return;
+      if (selectedLanguage.variants.length > 0) openLanguageSub();
+      else enterOnboarding();
+    });
+    document.getElementById("languageSubConfirm").addEventListener("click", () => {
+      if (selectedVariant) enterOnboarding();
+    });
+    document.getElementById("languageBack").addEventListener("click", () => showFunnelStage("language"));
+    birthMonth.addEventListener("change", updateDayOptions);
+    birthYear.addEventListener("change", updateDayOptions);
+    birthDay.addEventListener("change", updateBirthGate);
+
+    onboarding.addEventListener("pointerdown", event => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      swipeStartX = event.clientX;
+    });
+    onboarding.addEventListener("pointerup", event => {
+      if (swipeStartX === null) return;
+      const delta = event.clientX - swipeStartX;
+      swipeStartX = null;
+      if (Math.abs(delta) < 52 || onboardingPage === 1 || onboardingPage === 3) return;
+      if (delta < 0 && onboardingPage < 4) showOnboardingPage(onboardingPage + 1);
+      if (delta > 0 && onboardingPage > 0) showOnboardingPage(onboardingPage - 1);
+    });
+    onboarding.addEventListener("pointercancel", () => { swipeStartX = null; });
+    onboarding.addEventListener("dragstart", event => {
+      swipeStartX = event.clientX;
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", "onboarding-swipe");
+    });
+    onboarding.addEventListener("dragend", event => {
+      if (swipeStartX === null) return;
+      const delta = event.clientX - swipeStartX;
+      swipeStartX = null;
+      if (Math.abs(delta) < 52 || onboardingPage === 1 || onboardingPage === 3) return;
+      if (delta < 0 && onboardingPage < 4) showOnboardingPage(onboardingPage + 1);
+      if (delta > 0 && onboardingPage > 0) showOnboardingPage(onboardingPage - 1);
+    });
+
+    document.getElementById("chatForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const input = document.getElementById("chatInput");
+      const value = input.value.trim();
+      if (!value) return;
+      const messages = document.getElementById("chatMessages");
+      const user = document.createElement("div");
+      user.className = "message user";
+      user.textContent = value;
+      messages.appendChild(user);
+      input.value = "";
+      messages.scrollTop = messages.scrollHeight;
+      setTimeout(() => {
+        const guide = document.createElement("div");
+        guide.className = "message guide";
+        guide.textContent = "Cảm ơn bạn đã chia sẻ. Trước khi cùng nhìn sâu hơn, điều bạn muốn nhận được sau cuộc trò chuyện này là hiểu rõ cảm xúc, cân nhắc lựa chọn hay tìm một bước hành động cụ thể?";
+        messages.appendChild(guide);
+        messages.scrollTop = messages.scrollHeight;
+      }, 550);
+    });
+
+    renderExperts();
+    appendOptions(birthMonth, Array.from({ length: 12 }, (_, index) => index + 1), value => String(value).padStart(2, "0"));
+    appendOptions(
+      birthYear,
+      Array.from({ length: 101 }, (_, index) => new Date().getFullYear() - index)
+    );
+    updateDayOptions();
+    renderOnboardingDots();
+    startFirstRunFunnel();
+  </script>
+</body>
+</html>
